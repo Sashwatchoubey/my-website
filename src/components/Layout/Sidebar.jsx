@@ -10,7 +10,7 @@ import AiilsgLogo from '../UI/AiilsgLogo'
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard',            path: '/dashboard',   active: true },
   { icon: FolderKanban,    label: 'Projects',             path: '/projects',    active: true },
-  { icon: Users,           label: 'Manpower / Staff',     path: '/manpower',    active: false },
+  { icon: Users,           label: 'Manpower / Staff',     path: '/staff',       active: true },
   { icon: Wallet,          label: 'Salary Management',    path: '/salary',      active: false },
   { icon: CalendarDays,    label: 'Attendance',           path: '/attendance',  active: false },
   { icon: FileText,        label: 'Payslip',              path: '/payslip',     active: false },
