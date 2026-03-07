@@ -5,6 +5,7 @@ import {
   FileText, Receipt, TrendingUp, BarChart3, LineChart,
   CalendarCheck, Settings, LogOut, X, ChevronRight,
 } from 'lucide-react'
+import AiilsgLogo from '../UI/AiilsgLogo'
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard',            path: '/dashboard',   active: true },
@@ -54,9 +55,7 @@ export default function Sidebar({ open, onClose }) {
         {/* Logo */}
         <div className="p-5 border-b border-indigo-800/50 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-lg text-white font-bold text-sm">
-              AI
-            </div>
+            <AiilsgLogo size={40} />
             <div>
               <div className="text-white font-bold text-sm leading-tight">AIILSG</div>
               <div className="text-indigo-300 text-xs leading-tight">WB Centre · PMS</div>
