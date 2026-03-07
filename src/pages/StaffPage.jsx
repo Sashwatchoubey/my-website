@@ -608,19 +608,32 @@ function DeleteConfirm({ name, onConfirm, onClose }) {
 }
 
 // ─── Staff Form (Multi-step) ──────────────────────────────────────────────────
-function StaffForm({ initial, onSave, onClose, allProjects }) {
+function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
   const isEdit = !!initial
   const [step, setStep] = useState(0)
   const [form, setForm] = useState(initial ? { ...initial } : emptyForm())
   const [errors, setErrors] = useState({})
   const [sameAddress, setSameAddress] = useState(false)
 
-  const set = useCallback((field, value) => {
-    setForm(prev => ({ ...prev, [field]: value }))
-    setErrors(prev => { const e = { ...prev }; delete e[field]; return e })
-  }, [])
+  const addressMirrorMap = {
+    currentAddress: 'permanentAddress',
+    currentCity: 'permanentCity',
+    currentState: 'permanentState',
+    currentPIN: 'permanentPIN',
+  }
 
-  // Auto-copy address
+  const set = useCallback((field, value) => {
+    setForm(prev => {
+      const next = { ...prev, [field]: value }
+      if (sameAddress && field in addressMirrorMap) {
+        next[addressMirrorMap[field]] = value
+      }
+      return next
+    })
+    setErrors(prev => { const e = { ...prev }; delete e[field]; return e })
+  }, [sameAddress])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Copy address fields when checkbox is first toggled on
   useEffect(() => {
     if (sameAddress) {
       setForm(prev => ({
@@ -631,7 +644,7 @@ function StaffForm({ initial, onSave, onClose, allProjects }) {
         permanentPIN: prev.currentPIN,
       }))
     }
-  }, [sameAddress, form.currentAddress, form.currentCity, form.currentState, form.currentPIN])
+  }, [sameAddress])
 
   const gross = calcGross(form)
   const deductions = calcDeductions(form)
@@ -696,7 +709,13 @@ function StaffForm({ initial, onSave, onClose, allProjects }) {
   }
 
   function autoGenID() {
-    set('employeeID', `AIILSG-${String(Math.floor(Math.random() * 900) + 100)}`)
+    let candidate
+    let attempts = 0
+    do {
+      candidate = `AIILSG-${String(Math.floor(Math.random() * 900) + 100)}`
+      attempts++
+    } while (existingIDs.includes(candidate) && attempts < 1000)
+    set('employeeID', candidate)
   }
 
   return (
@@ -1556,6 +1575,7 @@ export default function StaffPage() {
           onSave={handleSave}
           onClose={() => { setShowForm(false); setEditTarget(null) }}
           allProjects={allProjects}
+          existingIDs={staffList.filter(s => !editTarget || s.id !== editTarget.id).map(s => s.employeeID)}
         />
       )}
       {viewTarget && (
