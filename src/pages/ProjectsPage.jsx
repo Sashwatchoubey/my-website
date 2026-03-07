@@ -5,7 +5,7 @@ import StatusBadge from '../components/UI/StatusBadge'
 import {
   Search, SlidersHorizontal, Plus, MapPin, Calendar, Users,
   TrendingUp, ChevronRight, X, Pencil, Trash2, Eye,
-  CheckCircle, AlertCircle, Phone, Mail, Building2, FileText,
+  CheckCircle, AlertCircle, Phone, Mail, Building2,
   IndianRupee, User, StickyNote,
 } from 'lucide-react'
 
@@ -25,6 +25,13 @@ function calcProjectPeriod(startDate, endDate) {
   if (years === 0) return `${rem} month${rem !== 1 ? 's' : ''}`
   if (rem === 0) return `${years} year${years !== 1 ? 's' : ''}`
   return `${years} yr ${rem} mo`
+}
+
+function formatLocation(location, district) {
+  if (!location && !district) return '—'
+  if (!location) return district
+  if (!district || location.toLowerCase() === district.toLowerCase()) return location
+  return `${location}, ${district}`
 }
 
 const EMPTY_FORM = {
@@ -47,6 +54,8 @@ const EMPTY_FORM = {
   staff: 0,
   spent: 0,
 }
+
+const REQUIRED_FIELDS = ['name', 'client', 'clientOrganization', 'description', 'location', 'budget', 'startDate', 'endDate', 'status']
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
 function Toast({ toasts }) {
@@ -97,9 +106,8 @@ function ProjectFormModal({ initial, onSave, onClose }) {
   }, [])
 
   function validate() {
-    const req = ['name', 'client', 'clientOrganization', 'description', 'location', 'budget', 'startDate', 'endDate', 'status']
     const errs = {}
-    req.forEach(k => {
+    REQUIRED_FIELDS.forEach(k => {
       if (!form[k] && form[k] !== 0) errs[k] = 'Required'
     })
     if (form.startDate && form.endDate && new Date(form.endDate) < new Date(form.startDate)) {
@@ -393,7 +401,7 @@ function ProjectDetailModal({ project, onClose, onEdit, onDelete }) {
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-3">Project Details</p>
             <div className="grid grid-cols-2 gap-3">
-              {infoRow('Location', `${project.location}, ${project.district}`, <MapPin size={11} />)}
+              {infoRow('Location', formatLocation(project.location, project.district), <MapPin size={11} />)}
               {infoRow('State', project.state || 'West Bengal', <MapPin size={11} />)}
               {infoRow('Start Date', formatDate(project.startDate), <Calendar size={11} />)}
               {infoRow('End Date', formatDate(project.endDate), <Calendar size={11} />)}
@@ -503,7 +511,7 @@ function ProjectCard({ project, onView, onEdit, onDelete }) {
           </div>
           <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
             <MapPin size={12} className="shrink-0" />
-            <span>{project.location}, {project.district}</span>
+            <span>{formatLocation(project.location, project.district)}</span>
           </div>
           <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
             <Calendar size={12} className="shrink-0" />
@@ -580,7 +588,7 @@ export default function ProjectsPage() {
       setViewProject(data)
     } else {
       // Create new
-      const newProject = { ...data, id: Date.now() }
+      const newProject = { ...data, id: Math.max(0, ...allProjects.map(p => p.id)) + 1 }
       setAllProjects(ps => [newProject, ...ps])
       showToast('Project added successfully!')
     }
@@ -605,12 +613,13 @@ export default function ProjectsPage() {
   }
 
   const filtered = useMemo(() => {
+    const q = search.toLowerCase()
     return allProjects.filter(p => {
       const matchSearch =
         !search ||
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.client.toLowerCase().includes(search.toLowerCase()) ||
-        (p.district || '').toLowerCase().includes(search.toLowerCase())
+        p.name.toLowerCase().includes(q) ||
+        p.client.toLowerCase().includes(q) ||
+        (p.district || '').toLowerCase().includes(q)
       const matchStatus = statusFilter === 'All' || p.status === statusFilter
       return matchSearch && matchStatus
     })
