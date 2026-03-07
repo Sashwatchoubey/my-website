@@ -129,11 +129,11 @@ export default function LoginPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setForm({ username: 'director', password: 'dir123' })}
+                onClick={() => setForm({ username: 'rahul', password: 'rahul123' })}
                 className="bg-white/8 hover:bg-white/15 border border-white/15 rounded-xl px-3 py-2 text-xs text-indigo-200 font-medium transition-all text-left"
               >
-                <div className="font-semibold text-white">director</div>
-                <div className="opacity-70">dir123</div>
+                <div className="font-semibold text-white">rahul</div>
+                <div className="opacity-70">rahul123 · Project Officer</div>
               </button>
             </div>
           </div>

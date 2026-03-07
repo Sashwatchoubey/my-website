@@ -4,7 +4,7 @@ const AuthContext = createContext(null)
 
 const DEMO_USERS = {
   admin: { password: 'admin123', name: 'Admin User', role: 'Administrator', avatar: 'AU' },
-  director: { password: 'dir123', name: 'Dr. Subrata Banerjee', role: 'Centre Director', avatar: 'SB' },
+  rahul: { password: 'rahul123', name: 'Rahul Kumar', role: 'Project Officer', avatar: 'RK' },
 }
 
 export function AuthProvider({ children }) {
