@@ -4,6 +4,19 @@ import SummaryCards from '../components/Dashboard/SummaryCards'
 import { ProjectExpenseChart, MonthlyFinancialChart, StaffPieChart } from '../components/Dashboard/Charts'
 import RecentActivities from '../components/Dashboard/RecentActivities'
 import QuickActions from '../components/Dashboard/QuickActions'
+import AiilsgLogo from '../components/UI/AiilsgLogo'
+
+const KEY_SERVICES = [
+  'Urban Planning & Development',
+  'Municipal Administration Training',
+  'Water Supply & Sanitation',
+  'Smart City Consulting',
+  'Capacity Building & Training',
+  'Research & Documentation',
+  'Project Management & Consultancy',
+  'Solid Waste Management',
+  'E-Governance Solutions',
+]
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -40,6 +53,81 @@ export default function DashboardPage() {
 
       {/* Summary cards */}
       <SummaryCards />
+
+      {/* About AIILSG */}
+      <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-indigo-100 dark:border-indigo-900/50 shadow-lg p-6">
+        {/* Decorative gradient blob */}
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-indigo-600/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-600/10 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="relative z-10">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-5">
+            <AiilsgLogo size={56} />
+            <div>
+              <div className="flex items-center flex-wrap gap-2">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight">
+                  All India Institute of Local Self Government
+                </h3>
+                <span className="bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-700">
+                  Est. 1926
+                </span>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                Headquarters: Mumbai, Maharashtra ·{' '}
+                <a
+                  href="https://www.aiilsg.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+                >
+                  www.aiilsg.org
+                </a>
+              </p>
+              <p className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold mt-1 italic">
+                "Strengthening Local Self-Governance for Sustainable Development"
+              </p>
+            </div>
+          </div>
+
+          {/* Description */}
+          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+            AIILSG is a premier national institute dedicated to strengthening local self-governance across India.
+            Established in 1926, it is one of the oldest institutions working in urban and rural local governance,
+            municipal administration, urban planning, capacity building, research, and consultancy. The Institute
+            serves Municipal Corporations, Urban Local Bodies, State Governments, Central Government, and
+            international organisations.
+          </p>
+
+          {/* West Bengal Centre callout */}
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 border border-indigo-200 dark:border-indigo-800 rounded-xl px-4 py-3 mb-5">
+            <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 mb-0.5 uppercase tracking-wide">
+              West Bengal Centre · Kolkata
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Manages multiple projects across West Bengal including urban development, municipal training,
+              water supply, sanitation, smart city initiatives, and capacity building programmes.
+            </p>
+          </div>
+
+          {/* Key services */}
+          <div>
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+              Key Services
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {KEY_SERVICES.map((service) => (
+                <span
+                  key={service}
+                  className="bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 text-xs font-medium px-3 py-1 rounded-full"
+                >
+                  {service}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

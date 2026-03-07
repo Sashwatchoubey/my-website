@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Menu, Search, Bell, Sun, Moon, ChevronDown, LogOut, User } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { todayFormatted } from '../../utils/helpers'
+import AiilsgLogo from '../UI/AiilsgLogo'
 
 export default function Topbar({ onMenuClick }) {
   const { user, logout, theme, toggleTheme } = useAuth()
@@ -35,7 +36,7 @@ export default function Topbar({ onMenuClick }) {
 
       {/* Brand (visible on mobile) */}
       <div className="lg:hidden flex items-center gap-2">
-        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">AI</div>
+        <AiilsgLogo size={28} />
         <span className="text-sm font-semibold text-gray-800 dark:text-white">AIILSG WB</span>
       </div>
 

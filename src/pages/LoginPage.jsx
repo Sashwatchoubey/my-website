@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Eye, EyeOff, LogIn, Building2, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, LogIn, Loader2 } from 'lucide-react'
+import AiilsgLogo from '../components/UI/AiilsgLogo'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -38,12 +39,15 @@ export default function LoginPage() {
         <div className="glass rounded-3xl p-8 shadow-2xl">
           {/* Logo & Title */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-2xl mb-4 mx-auto">
-              <Building2 size={36} className="text-white" />
+            <div className="inline-flex items-center justify-center mb-4 mx-auto drop-shadow-2xl">
+              <AiilsgLogo size={80} />
             </div>
             <h1 className="text-2xl font-bold text-white tracking-tight">AIILSG</h1>
             <p className="text-indigo-200 text-sm font-medium mt-1">
               All India Institute of Local Self Government
+            </p>
+            <p className="text-indigo-300/80 text-xs mt-1">
+              Established 1926 | Strengthening Local Self-Governance
             </p>
             <div className="mt-2 inline-block bg-white/15 text-white text-xs font-semibold px-3 py-1 rounded-full border border-white/20">
               West Bengal Centre — Project Management System
