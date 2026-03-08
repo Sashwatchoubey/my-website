@@ -82,71 +82,143 @@
   transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Print styles — hide everything except the designated printable area */
+/* Print styles */
 @media print {
-  /* Step 1: make everything invisible (visibility: hidden lets children override) */
+  /* ── 1. Hide everything by default ───────────────────────────────────────── */
   body * {
     visibility: hidden !important;
   }
 
-  /* Step 2: reveal the active print area and all its children */
-  .staff-print-area,
-  .staff-print-area *,
+  /* ── 2. Staff professional print content ─────────────────────────────────── */
+  /* The hidden-on-screen div that holds the MNC-level table layout */
+  .staff-print-content {
+    display: block !important;
+    visibility: visible !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 11pt !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .staff-print-content * {
+    visibility: visible !important;
+    overflow: visible !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Prevent section tables from splitting mid-row */
+  .staff-print-content table {
+    page-break-inside: auto;
+    break-inside: auto;
+    border-collapse: collapse !important;
+  }
+  .staff-print-content tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Explicit page break between print pages */
+  .staff-print-page-break {
+    page-break-before: always !important;
+    break-before: always !important;
+  }
+
+  /* Staff photo — no cropping */
+  .staff-photo-print {
+    width: 120px !important;
+    height: 150px !important;
+    object-fit: cover !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Hide the on-screen modal overlay during print */
+  .staff-modal-overlay {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* ── 3. Attendance print area ─────────────────────────────────────────────── */
   .attendance-print-area,
-  .attendance-print-area *,
+  .attendance-print-area * {
+    visibility: visible !important;
+  }
+
+  .attendance-print-area {
+    position: static !important;
+    width: 100% !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    background-color: white !important;
+    color: black !important;
+  }
+
+  .attendance-print-area * {
+    overflow: visible !important;
+    max-height: none !important;
+    background-color: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+
+  .attendance-print-area thead tr { background-color: #4f46e5 !important; color: white !important; }
+  .attendance-print-area thead th { color: white !important; }
+
+  /* ── 4. Salary print area ─────────────────────────────────────────────────── */
   .salary-print-area,
   .salary-print-area * {
     visibility: visible !important;
   }
 
-  /* Step 3: position the print area to fill the whole page */
-  .staff-print-area,
-  .attendance-print-area,
   .salary-print-area {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+    position: static !important;
     width: 100% !important;
     overflow: visible !important;
+    height: auto !important;
     max-height: none !important;
-  }
-
-  /* Step 4: white background + black text for clean print output */
-  .staff-print-area,
-  .staff-print-area *,
-  .attendance-print-area,
-  .attendance-print-area *,
-  .salary-print-area,
-  .salary-print-area * {
     background-color: white !important;
     color: black !important;
-    border-color: #ccc !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
   }
 
-  /* Step 5: remove scroll constraints so all rows print */
-  .staff-print-area .overflow-y-auto,
-  .salary-print-area .overflow-y-auto,
-  .attendance-print-area .overflow-x-auto {
+  .salary-print-area * {
     overflow: visible !important;
     max-height: none !important;
+    background-color: white !important;
+    color: black !important;
+    box-shadow: none !important;
   }
 
-  /* Step 6: hide action-button footer inside the staff detail modal */
-  .staff-print-area .rounded-b-2xl { display: none !important; }
-
-  /* Re-apply specific background colours for table headers */
+  /* ── 5. Shared print utilities ────────────────────────────────────────────── */
   .print-header-bg { background-color: #1e3a8a !important; color: white !important; }
   .print-table-header { background-color: #e5e7eb !important; color: black !important; }
-
-  /* Attendance table header row */
-  .attendance-print-area thead tr { background-color: #4f46e5 !important; color: white !important; }
-  .attendance-print-area thead th { color: white !important; }
 
   /* Page breaks */
   .print-page-break { page-break-after: always !important; }
 
   /* Hide elements that must never appear in print */
   .no-print { display: none !important; visibility: hidden !important; }
+
+  /* Full width for print */
+  body, html {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Table borders should print */
+  table, th, td {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }

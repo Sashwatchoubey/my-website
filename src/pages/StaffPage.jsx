@@ -5,7 +5,7 @@ import {
   Search, Plus, X, Pencil, Trash2, Eye, CheckCircle, AlertCircle,
   LayoutGrid, List, User, Phone,
   MapPin, Briefcase, CreditCard, Building2, IndianRupee,
-  FileText, Users, Filter, Printer, Clock, CalendarDays,
+  FileText, Users, Filter, Printer, Clock,
 } from 'lucide-react'
 
 
@@ -1170,50 +1170,6 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
               </div>
             )}
 
-            {/* Local Holidays */}
-            <SecHeader title="Local Holidays (Staff-Specific)" icon={CalendarDays} />
-            <div className="col-span-full">
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">These holidays apply only to this staff member's attendance.</p>
-              {(form.localHolidays || []).map((lh, idx) => (
-                <div key={idx} className="flex gap-2 mb-2 items-center">
-                  <input
-                    type="date"
-                    className={inputCls + ' flex-1'}
-                    value={lh.date}
-                    onChange={e => {
-                      const updated = [...(form.localHolidays || [])]
-                      updated[idx] = { ...updated[idx], date: e.target.value }
-                      set('localHolidays', updated)
-                    }}
-                  />
-                  <input
-                    type="text"
-                    className={inputCls + ' flex-[2]'}
-                    value={lh.name}
-                    placeholder="Holiday name"
-                    onChange={e => {
-                      const updated = [...(form.localHolidays || [])]
-                      updated[idx] = { ...updated[idx], name: e.target.value }
-                      set('localHolidays', updated)
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => set('localHolidays', (form.localHolidays || []).filter((_, i) => i !== idx))}
-                    className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all shrink-0"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => set('localHolidays', [...(form.localHolidays || []), { date: '', name: '' }])}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl border border-dashed border-indigo-300 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 text-sm font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"
-              >
-                <Plus size={14} /> Add Local Holiday
-              </button>
-            </div>
             <div className="col-span-full">
               <Field label="Remarks">
                 <textarea className={inputCls} rows={3} value={form.remarks} onChange={e => set('remarks', e.target.value)} placeholder="Additional notes or remarks" />
@@ -1238,12 +1194,90 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
   )
 }
 
+// ─── Working Days display helper ──────────────────────────────────────────────
+function fmtWorkingDays(wd, customDays) {
+  const map = {
+    'Mon-Fri': 'Monday to Friday',
+    'Mon-Sat': 'Monday to Saturday',
+    'Mon-Sat-2nd4thOff': 'Mon–Sat (2nd & 4th Sat Off)',
+    'Mon-Sat-1st3rdOff': 'Mon–Sat (1st & 3rd Sat Off)',
+    'Custom': customDays?.length ? customDays.join(', ') : 'Custom',
+  }
+  return map[wd] || wd || '—'
+}
+
+function fmtTime(t) {
+  if (!t) return '—'
+  const [h, m] = t.split(':')
+  const hr = parseInt(h, 10)
+  const ampm = hr >= 12 ? 'PM' : 'AM'
+  const h12 = hr % 12 || 12
+  return `${h12}:${m} ${ampm}`
+}
+
+// ─── Print style constants (defined outside component to avoid re-creation) ───
+const PRINT_TD_LABEL = {
+  padding: '5px 10px', fontWeight: 'bold', fontSize: '10.5pt',
+  borderBottom: '1px solid #ddd', width: '38%', verticalAlign: 'top',
+  backgroundColor: '#f8fafc', color: '#000',
+}
+const PRINT_TD_VALUE = {
+  padding: '5px 10px', fontSize: '10.5pt',
+  borderBottom: '1px solid #ddd', color: '#000',
+}
+const PRINT_TH_SECTION = {
+  padding: '6px 10px', fontWeight: 'bold', fontSize: '11pt',
+  backgroundColor: '#1e3a8a', color: '#fff', textAlign: 'left',
+}
+const PRINT_TABLE_STYLE = {
+  width: '100%', borderCollapse: 'collapse',
+  border: '1px solid #bbb', marginBottom: '10px',
+  pageBreakInside: 'avoid', breakInside: 'avoid',
+}
+const PRINT_PAGE_HEADER = {
+  borderBottom: '3px solid #1e3a8a', marginBottom: '14px',
+  paddingBottom: '8px', textAlign: 'center',
+}
+
 // ─── Staff Profile View ───────────────────────────────────────────────────────
 function StaffProfile({ staff, onClose, onEdit }) {
   const gross = calcGross(staff)
   const deductions = calcDeductions(staff)
   const net = gross - deductions
 
+  // ── Print helpers ────────────────────────────────────────────────────────────
+  const tdLabel = PRINT_TD_LABEL
+  const tdValue = PRINT_TD_VALUE
+  const thSection = PRINT_TH_SECTION
+  const tableStyle = PRINT_TABLE_STYLE
+  const pageHeaderStyle = PRINT_PAGE_HEADER
+
+  const earnings = [
+    ['Basic Salary', staff.basicSalary],
+    ['HRA', staff.hra],
+    ['DA', staff.da],
+    ['Conveyance', staff.conveyance],
+    ['Medical', staff.medical],
+    ['Special Allowance', staff.specialAllowance],
+    ['Other Allowances', staff.otherAllowances],
+  ].filter(([, v]) => Number(v) > 0)
+
+  const deductionList = [
+    ['PF', staff.pfDeduction],
+    ['ESI', staff.esiDeduction],
+    ['Professional Tax', staff.professionalTax],
+    ['TDS', staff.tds],
+    ['Other Deductions', staff.otherDeductions],
+  ].filter(([, v]) => Number(v) > 0)
+
+  // Pad shorter list to same length for side-by-side salary table
+  const maxRows = Math.max(earnings.length, deductionList.length)
+  const earnPadded = [...earnings, ...Array(maxRows - earnings.length).fill(['', ''])]
+  const dedPadded = [...deductionList, ...Array(maxRows - deductionList.length).fill(['', ''])]
+
+  const printDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+
+  // ── On-screen sub-components ─────────────────────────────────────────────────
   function InfoRow({ label, value }) {
     return (
       <div className="flex flex-col gap-0.5">
@@ -1262,234 +1296,471 @@ function StaffProfile({ staff, onClose, onEdit }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-start justify-center p-4 overflow-y-auto">
-      <div className="staff-print-area bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl my-8">
-        {/* AIILSG Letterhead Header */}
-        <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 rounded-t-2xl p-6 text-white relative">
-          <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-xl transition-all">
-            <X size={18} />
-          </button>
-          <div className="text-center mb-5">
-            <p className="text-xs font-bold tracking-widest text-indigo-200 uppercase mb-1">All India Institute of Local Self Government</p>
-            <h2 className="text-xl font-bold tracking-wide">STAFF DETAILS</h2>
-            <div className="w-24 h-0.5 bg-white/40 mx-auto mt-2" />
+    <>
+      {/* ══════════════════════════════════════════════════════════════════════
+          PRINT-ONLY LAYOUT — hidden on screen, shown during print
+          Professional MNC-level 2-page employee profile
+          ══════════════════════════════════════════════════════════════════ */}
+      <div className="staff-print-content" style={{ display: 'none', fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '11pt', color: '#000', background: '#fff', padding: '18px 24px' }}>
+
+        {/* ── PAGE 1 ─────────────────────────────────────────────────────────── */}
+        <div>
+          {/* Header */}
+          <div style={pageHeaderStyle}>
+            <div style={{ fontSize: '15pt', fontWeight: 'bold', color: '#1e3a8a', letterSpacing: '0.5px' }}>
+              ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT
+            </div>
+            <div style={{ fontSize: '12pt', fontWeight: 'bold', marginTop: '4px', letterSpacing: '1px' }}>EMPLOYEE DETAILS</div>
           </div>
-          <div className="flex items-start gap-6">
-            {/* Photo */}
-            <div className="w-[100px] h-[120px] rounded-xl border-4 border-white/40 bg-white/10 overflow-hidden flex items-center justify-center shrink-0 shadow-xl">
-              {staff.photo ? (
-                <img src={staff.photo} alt={staff.fullName} className="w-full h-full object-cover" />
-              ) : (
-                <div className={`w-full h-full bg-gradient-to-br ${avatarGradient(staff.id)} flex items-center justify-center text-3xl font-bold text-white`}>
-                  {initials(staff.fullName)}
-                </div>
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-2xl font-bold truncate">{staff.fullName}</h3>
-              <p className="text-indigo-200 mt-0.5">{staff.designation}</p>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 mt-3 text-sm">
-                <div>
-                  <span className="text-indigo-300 text-xs">Employee ID</span>
-                  <p className="font-semibold">{staff.employeeID || '—'}</p>
-                </div>
-                <div>
-                  <span className="text-indigo-300 text-xs">Department</span>
-                  <p className="font-semibold">{staff.department || '—'}</p>
-                </div>
-                <div>
-                  <span className="text-indigo-300 text-xs">Status</span>
-                  <p><span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${statusColor(staff.employmentStatus)}`}>{staff.employmentStatus}</span></p>
-                </div>
-                <div>
-                  <span className="text-indigo-300 text-xs">Location</span>
-                  <p className="font-semibold">{staff.projectLocation || '—'}</p>
-                </div>
-              </div>
-            </div>
+
+          {/* Personal Info + Photo side by side */}
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '10px' }}>
+            <tbody>
+              <tr>
+                {/* Personal info */}
+                <td style={{ verticalAlign: 'top', paddingRight: '14px', width: '70%' }}>
+                  <table style={tableStyle}>
+                    <tbody>
+                      <tr><th colSpan={2} style={thSection}>PERSONAL INFORMATION</th></tr>
+                      <tr><td style={tdLabel}>Employee ID</td><td style={tdValue}>{staff.employeeID || '—'}</td></tr>
+                      <tr><td style={tdLabel}>Full Name</td><td style={tdValue}>{staff.fullName || '—'}</td></tr>
+                      <tr><td style={tdLabel}>Father's / Husband's Name</td><td style={tdValue}>{staff.fatherName || '—'}</td></tr>
+                      <tr><td style={tdLabel}>Date of Birth</td><td style={tdValue}>{staff.dob ? formatDate(staff.dob) : '—'}</td></tr>
+                      <tr><td style={tdLabel}>Age</td><td style={tdValue}>{staff.dob ? `${calcAge(staff.dob)} Years` : '—'}</td></tr>
+                      <tr><td style={tdLabel}>Gender</td><td style={tdValue}>{staff.gender || '—'}</td></tr>
+                      <tr><td style={tdLabel}>Marital Status</td><td style={tdValue}>{staff.maritalStatus || '—'}</td></tr>
+                      <tr><td style={tdLabel}>Blood Group</td><td style={tdValue}>{staff.bloodGroup || '—'}</td></tr>
+                      <tr><td style={tdLabel}>Religion</td><td style={tdValue}>{staff.religion || '—'}</td></tr>
+                      <tr><td style={tdLabel}>Category</td><td style={tdValue}>{staff.category || '—'}</td></tr>
+                      <tr><td style={{ ...tdLabel, borderBottom: 'none' }}>Nationality</td><td style={{ ...tdValue, borderBottom: 'none' }}>{staff.nationality || '—'}</td></tr>
+                    </tbody>
+                  </table>
+                </td>
+                {/* Photo */}
+                <td style={{ verticalAlign: 'top', textAlign: 'center', width: '30%' }}>
+                  <div style={{ border: '2px solid #333', display: 'inline-block', padding: '4px', marginTop: '4px' }}>
+                    {staff.photo ? (
+                      <img
+                        src={staff.photo}
+                        alt="Employee Photo"
+                        className="staff-photo-print"
+                        style={{ width: '120px', height: '150px', objectFit: 'cover', display: 'block' }}
+                      />
+                    ) : (
+                      <div style={{ width: '120px', height: '150px', backgroundColor: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13pt', color: '#6b7280', flexDirection: 'column', gap: '4px' }}>
+                        <span style={{ fontSize: '28pt', color: '#9ca3af' }}>👤</span>
+                        <span style={{ fontSize: '9pt' }}>No Photo</span>
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ marginTop: '5px', fontSize: '9pt', fontWeight: 'bold', color: '#374151' }}>Passport Size Photo</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Contact Information */}
+          <table style={tableStyle}>
+            <tbody>
+              <tr><th colSpan={2} style={thSection}>CONTACT INFORMATION</th></tr>
+              <tr><td style={tdLabel}>Mobile Number</td><td style={tdValue}>{staff.mobile || '—'}</td></tr>
+              <tr><td style={tdLabel}>Alternate Mobile</td><td style={tdValue}>{staff.alternateMobile || '—'}</td></tr>
+              <tr><td style={tdLabel}>Email ID</td><td style={tdValue}>{staff.email || '—'}</td></tr>
+              <tr>
+                <td style={tdLabel}>Emergency Contact</td>
+                <td style={tdValue}>
+                  {staff.emergencyName ? `${staff.emergencyName}${staff.emergencyRelation ? ` (${staff.emergencyRelation})` : ''}${staff.emergencyNumber ? ` — ${staff.emergencyNumber}` : ''}` : '—'}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ ...tdLabel, fontWeight: 'bold', backgroundColor: '#eff6ff' }}>Current Address</td>
+                <td style={tdValue}>
+                  {[staff.currentAddress, staff.currentCity, staff.currentState, staff.currentPIN].filter(Boolean).join(', ') || '—'}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ ...tdLabel, borderBottom: 'none', fontWeight: 'bold', backgroundColor: '#eff6ff' }}>Permanent Address</td>
+                <td style={{ ...tdValue, borderBottom: 'none' }}>
+                  {[staff.permanentAddress, staff.permanentCity, staff.permanentState, staff.permanentPIN].filter(Boolean).join(', ') || '—'}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Identity Documents */}
+          <table style={tableStyle}>
+            <tbody>
+              <tr><th colSpan={2} style={thSection}>IDENTITY DOCUMENTS</th></tr>
+              <tr><td style={tdLabel}>Aadhaar Number</td><td style={tdValue}>{staff.aadhaarNumber || '—'}</td></tr>
+              <tr><td style={tdLabel}>PAN Number</td><td style={tdValue}>{staff.panNumber || '—'}</td></tr>
+              <tr><td style={tdLabel}>Passport Number</td><td style={tdValue}>{staff.passportNumber || '—'}</td></tr>
+              <tr><td style={tdLabel}>Voter ID</td><td style={tdValue}>{staff.voterID || '—'}</td></tr>
+              <tr><td style={{ ...tdLabel, borderBottom: 'none' }}>Driving License</td><td style={{ ...tdValue, borderBottom: 'none' }}>{staff.dlNumber || '—'}</td></tr>
+            </tbody>
+          </table>
+
+          {/* Page 1 footer */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', fontSize: '9pt', color: '#555', borderTop: '1px solid #ddd', paddingTop: '6px' }}>
+            <span>AIILSG — WB Centre | Confidential</span>
+            <span>Page 1 of 2</span>
           </div>
         </div>
 
-        {/* All sections in one scrollable view */}
-        <div className="p-6 overflow-y-auto max-h-[65vh]">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+        {/* ── PAGE BREAK ──────────────────────────────────────────────────────── */}
+        <div className="staff-print-page-break" />
 
-            {/* Personal Details */}
-            <SectionTitle title="Personal Details" />
-            <InfoRow label="Full Name" value={staff.fullName} />
-            <InfoRow label="Father's / Husband's Name" value={staff.fatherName} />
-            <InfoRow label="Date of Birth" value={staff.dob ? formatDate(staff.dob) : ''} />
-            <InfoRow label="Age" value={staff.dob ? `${calcAge(staff.dob)} years` : ''} />
-            <InfoRow label="Gender" value={staff.gender} />
-            <InfoRow label="Marital Status" value={staff.maritalStatus} />
-            <InfoRow label="Blood Group" value={staff.bloodGroup} />
-            <InfoRow label="Religion" value={staff.religion} />
-            <InfoRow label="Category" value={staff.category} />
-            <InfoRow label="Nationality" value={staff.nationality} />
-
-            {/* Contact Details */}
-            <SectionTitle title="Contact Details" />
-            <InfoRow label="Mobile" value={staff.mobile} />
-            <InfoRow label="Alternate Mobile" value={staff.alternateMobile} />
-            <InfoRow label="Email" value={staff.email} />
-            <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
-              <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Current Address</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InfoRow label="Address" value={staff.currentAddress} />
-                <InfoRow label="City" value={staff.currentCity} />
-                <InfoRow label="State" value={staff.currentState} />
-                <InfoRow label="PIN Code" value={staff.currentPIN} />
-              </div>
+        {/* ── PAGE 2 ─────────────────────────────────────────────────────────── */}
+        <div>
+          {/* Header */}
+          <div style={pageHeaderStyle}>
+            <div style={{ fontSize: '15pt', fontWeight: 'bold', color: '#1e3a8a', letterSpacing: '0.5px' }}>
+              ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT
             </div>
-            <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
-              <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Permanent Address</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InfoRow label="Address" value={staff.permanentAddress} />
-                <InfoRow label="City" value={staff.permanentCity} />
-                <InfoRow label="State" value={staff.permanentState} />
-                <InfoRow label="PIN Code" value={staff.permanentPIN} />
-              </div>
-            </div>
-            <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
-              <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Emergency Contact</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <InfoRow label="Name" value={staff.emergencyName} />
-                <InfoRow label="Number" value={staff.emergencyNumber} />
-                <InfoRow label="Relation" value={staff.emergencyRelation} />
-              </div>
-            </div>
-
-            {/* Identity Documents */}
-            <SectionTitle title="Identity Documents" />
-            <div>
-              <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aadhaar Number</span>
-              <p className="text-sm text-gray-800 dark:text-gray-200 font-medium mt-1 flex items-center gap-2">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-lg text-xs font-bold">ID</span>
-                {staff.aadhaarNumber || '—'}
-              </p>
-            </div>
-            <div>
-              <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">PAN Number</span>
-              <p className="text-sm text-gray-800 dark:text-gray-200 font-medium mt-1 flex items-center gap-2">
-                <span className="bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-400 px-2 py-0.5 rounded-lg text-xs font-bold">PAN</span>
-                {staff.panNumber || '—'}
-              </p>
-            </div>
-            <InfoRow label="Passport Number" value={staff.passportNumber} />
-            <InfoRow label="Voter ID" value={staff.voterID} />
-            <InfoRow label="Driving License" value={staff.dlNumber} />
-            <InfoRow label="Other Document" value={staff.otherDocName} />
-
-            {/* Bank Details */}
-            <SectionTitle title="Bank Details" />
-            <InfoRow label="Bank Name" value={staff.bankName} />
-            <InfoRow label="Account Type" value={staff.accountType} />
-            <InfoRow label="Account Number" value={staff.accountNumber} />
-            <InfoRow label="IFSC Code" value={staff.ifscCode} />
-            <InfoRow label="Branch Name" value={staff.branchName} />
-
-            {/* Employment Details */}
-            <SectionTitle title="Employment Details" />
-            <InfoRow label="Employee ID" value={staff.employeeID} />
-            <InfoRow label="Designation" value={staff.designation} />
-            <InfoRow label="Department" value={staff.department} />
-            <InfoRow label="Employment Type" value={staff.employmentType} />
-            <InfoRow label="Employment Status" value={staff.employmentStatus} />
-            <InfoRow label="Joining Date" value={staff.joiningDate ? formatDate(staff.joiningDate) : ''} />
-            <InfoRow label="Resignation Date" value={staff.resignationDate ? formatDate(staff.resignationDate) : ''} />
-            <InfoRow label="Last Working Date" value={staff.lastWorkingDate ? formatDate(staff.lastWorkingDate) : ''} />
-            <InfoRow label="Qualification" value={staff.qualification} />
-            <InfoRow label="Experience" value={staff.experience ? `${staff.experience} years` : ''} />
-            <InfoRow label="Previous Organization" value={staff.previousOrg} />
-            <InfoRow label="Reporting Manager" value={staff.reportingManager} />
-            <InfoRow label="Project Location" value={staff.projectLocation} />
-
-            {/* Salary Details */}
-            <SectionTitle title="Salary Details" />
-            <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 text-center">
-                <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-1">Gross Salary</p>
-                <p className="text-xl font-bold text-indigo-700 dark:text-indigo-300">{fmtCur(gross)}</p>
-              </div>
-              <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-center">
-                <p className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wider mb-1">Deductions</p>
-                <p className="text-xl font-bold text-red-700 dark:text-red-300">{fmtCur(deductions)}</p>
-              </div>
-              <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 text-center">
-                <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">Net Salary</p>
-                <p className="text-xl font-bold text-emerald-700 dark:text-emerald-300">{fmtCur(net)}</p>
-              </div>
-            </div>
-            <div>
-              <p className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">Earnings</p>
-              <div className="space-y-1.5 text-sm">
-                {[
-                  ['Basic Salary', staff.basicSalary],
-                  ['HRA', staff.hra],
-                  ['DA', staff.da],
-                  ['Conveyance', staff.conveyance],
-                  ['Medical', staff.medical],
-                  ['Special Allowance', staff.specialAllowance],
-                  ['Other Allowances', staff.otherAllowances],
-                ].filter(([, v]) => Number(v) > 0).map(([label, val]) => (
-                  <div key={label} className="flex justify-between text-gray-700 dark:text-gray-300">
-                    <span>{label}</span><span className="font-semibold">{fmtCur(val)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">Deductions</p>
-              <div className="space-y-1.5 text-sm">
-                {[
-                  ['PF', staff.pfDeduction],
-                  ['ESI', staff.esiDeduction],
-                  ['Professional Tax', staff.professionalTax],
-                  ['TDS', staff.tds],
-                  ['Other Deductions', staff.otherDeductions],
-                ].filter(([, v]) => Number(v) > 0).map(([label, val]) => (
-                  <div key={label} className="flex justify-between text-gray-700 dark:text-gray-300">
-                    <span>{label}</span><span className="font-semibold text-red-600 dark:text-red-400">- {fmtCur(val)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Project Assignment */}
-            <SectionTitle title="Project Assignment" />
-            <div className="col-span-full">
-              <InfoRow label="Assigned Project" value={staff.assignedProject} />
-            </div>
-            <InfoRow label="Project Role" value={staff.projectRole} />
-            <InfoRow label="Project Site Location" value={staff.projectSiteLocation} />
-            <InfoRow label="HR Cost to Project (₹/month)" value={fmtCur(staff.hrCostToProject)} />
-            <InfoRow label="Assignment Start Date" value={staff.assignmentStart ? formatDate(staff.assignmentStart) : ''} />
-            <InfoRow label="Assignment End Date" value={staff.assignmentEnd ? formatDate(staff.assignmentEnd) : ''} />
-            <div className="col-span-full">
-              <InfoRow label="Remarks" value={staff.remarks} />
-            </div>
+            <div style={{ fontSize: '12pt', fontWeight: 'bold', marginTop: '4px', letterSpacing: '1px' }}>EMPLOYEE DETAILS (Continued)</div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 rounded-b-2xl">
-          <button onClick={onClose}
-            className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-            ← Back to Staff List
-          </button>
-          <div className="flex gap-3">
-            <button onClick={() => window.print()}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
-              <Printer size={14} /> Print
-            </button>
-            <button onClick={onEdit}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-all">
-              <Pencil size={14} /> Edit
-            </button>
+          {/* Employment Details */}
+          <table style={tableStyle}>
+            <tbody>
+              <tr><th colSpan={2} style={thSection}>EMPLOYMENT DETAILS</th></tr>
+              <tr><td style={tdLabel}>Designation</td><td style={tdValue}>{staff.designation || '—'}</td></tr>
+              <tr><td style={tdLabel}>Department</td><td style={tdValue}>{staff.department || '—'}</td></tr>
+              <tr><td style={tdLabel}>Employment Type</td><td style={tdValue}>{staff.employmentType || '—'}</td></tr>
+              <tr><td style={tdLabel}>Employment Status</td><td style={tdValue}>{staff.employmentStatus || '—'}</td></tr>
+              <tr><td style={tdLabel}>Date of Joining</td><td style={tdValue}>{staff.joiningDate ? formatDate(staff.joiningDate) : '—'}</td></tr>
+              <tr><td style={tdLabel}>Resignation Date</td><td style={tdValue}>{staff.resignationDate ? formatDate(staff.resignationDate) : '—'}</td></tr>
+              <tr><td style={tdLabel}>Last Working Date</td><td style={tdValue}>{staff.lastWorkingDate ? formatDate(staff.lastWorkingDate) : '—'}</td></tr>
+              <tr><td style={tdLabel}>Qualification</td><td style={tdValue}>{staff.qualification || '—'}</td></tr>
+              <tr><td style={tdLabel}>Experience</td><td style={tdValue}>{staff.experience ? `${staff.experience} Years` : '—'}</td></tr>
+              <tr><td style={tdLabel}>Reporting Manager</td><td style={tdValue}>{staff.reportingManager || '—'}</td></tr>
+              <tr><td style={tdLabel}>Project Location</td><td style={tdValue}>{staff.projectLocation || '—'}</td></tr>
+              <tr><td style={tdLabel}>Working Days</td><td style={tdValue}>{fmtWorkingDays(staff.workingDays, staff.customWorkingDays)}</td></tr>
+              <tr><td style={{ ...tdLabel, borderBottom: 'none' }}>Shift Timing</td><td style={{ ...tdValue, borderBottom: 'none' }}>{staff.shiftStart && staff.shiftEnd ? `${fmtTime(staff.shiftStart)} — ${fmtTime(staff.shiftEnd)}` : '—'}</td></tr>
+            </tbody>
+          </table>
+
+          {/* Bank Details */}
+          <table style={tableStyle}>
+            <tbody>
+              <tr><th colSpan={2} style={thSection}>BANK DETAILS</th></tr>
+              <tr><td style={tdLabel}>Bank Name</td><td style={tdValue}>{staff.bankName || '—'}</td></tr>
+              <tr><td style={tdLabel}>Account Number</td><td style={tdValue}>{staff.accountNumber || '—'}</td></tr>
+              <tr><td style={tdLabel}>IFSC Code</td><td style={tdValue}>{staff.ifscCode || '—'}</td></tr>
+              <tr><td style={tdLabel}>Branch</td><td style={tdValue}>{staff.branchName || '—'}</td></tr>
+              <tr><td style={{ ...tdLabel, borderBottom: 'none' }}>Account Type</td><td style={{ ...tdValue, borderBottom: 'none' }}>{staff.accountType || '—'}</td></tr>
+            </tbody>
+          </table>
+
+          {/* Salary Details — side-by-side Earnings | Deductions */}
+          <table style={{ ...tableStyle, marginBottom: '10px' }}>
+            <tbody>
+              <tr>
+                <th colSpan={4} style={thSection}>SALARY DETAILS (Monthly)</th>
+              </tr>
+              <tr>
+                <th style={{ padding: '5px 10px', backgroundColor: '#dbeafe', color: '#1e3a8a', fontSize: '10.5pt', fontWeight: 'bold', border: '1px solid #bbb', width: '25%' }}>EARNINGS</th>
+                <th style={{ padding: '5px 10px', backgroundColor: '#dbeafe', color: '#1e3a8a', fontSize: '10.5pt', fontWeight: 'bold', border: '1px solid #bbb', width: '25%' }}>Amount</th>
+                <th style={{ padding: '5px 10px', backgroundColor: '#fee2e2', color: '#991b1b', fontSize: '10.5pt', fontWeight: 'bold', border: '1px solid #bbb', width: '25%' }}>DEDUCTIONS</th>
+                <th style={{ padding: '5px 10px', backgroundColor: '#fee2e2', color: '#991b1b', fontSize: '10.5pt', fontWeight: 'bold', border: '1px solid #bbb', width: '25%' }}>Amount</th>
+              </tr>
+              {earnPadded.map(([elabel, eamt], i) => {
+                const [dlabel, damt] = dedPadded[i] || ['', '']
+                return (
+                  <tr key={i}>
+                    <td style={{ padding: '4px 10px', border: '1px solid #ddd', fontSize: '10.5pt' }}>{elabel}</td>
+                    <td style={{ padding: '4px 10px', border: '1px solid #ddd', fontSize: '10.5pt', textAlign: 'right' }}>{eamt ? fmtCur(eamt) : ''}</td>
+                    <td style={{ padding: '4px 10px', border: '1px solid #ddd', fontSize: '10.5pt' }}>{dlabel}</td>
+                    <td style={{ padding: '4px 10px', border: '1px solid #ddd', fontSize: '10.5pt', textAlign: 'right' }}>{damt ? fmtCur(damt) : ''}</td>
+                  </tr>
+                )
+              })}
+              <tr>
+                <td style={{ padding: '5px 10px', fontWeight: 'bold', backgroundColor: '#dbeafe', border: '1px solid #bbb', fontSize: '10.5pt' }}>GROSS SALARY</td>
+                <td style={{ padding: '5px 10px', fontWeight: 'bold', backgroundColor: '#dbeafe', border: '1px solid #bbb', fontSize: '10.5pt', textAlign: 'right' }}>{fmtCur(gross)}</td>
+                <td style={{ padding: '5px 10px', fontWeight: 'bold', backgroundColor: '#fee2e2', border: '1px solid #bbb', fontSize: '10.5pt' }}>TOTAL DEDUCTIONS</td>
+                <td style={{ padding: '5px 10px', fontWeight: 'bold', backgroundColor: '#fee2e2', border: '1px solid #bbb', fontSize: '10.5pt', textAlign: 'right' }}>{fmtCur(deductions)}</td>
+              </tr>
+              <tr>
+                <td colSpan={4} style={{ padding: '7px 10px', fontWeight: 'bold', backgroundColor: '#dcfce7', border: '1px solid #bbb', fontSize: '11pt', textAlign: 'center', color: '#14532d' }}>
+                  NET SALARY: {fmtCur(net)} per month
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Project Assignment */}
+          <table style={tableStyle}>
+            <tbody>
+              <tr><th colSpan={2} style={thSection}>PROJECT ASSIGNMENT</th></tr>
+              <tr><td style={tdLabel}>Assigned Project</td><td style={tdValue}>{staff.assignedProject || '—'}</td></tr>
+              <tr><td style={tdLabel}>Project Role</td><td style={tdValue}>{staff.projectRole || '—'}</td></tr>
+              <tr><td style={tdLabel}>Project Site Location</td><td style={tdValue}>{staff.projectSiteLocation || '—'}</td></tr>
+              <tr><td style={tdLabel}>HR Cost (Monthly)</td><td style={tdValue}>{fmtCur(staff.hrCostToProject)}</td></tr>
+              {staff.remarks ? <tr><td style={{ ...tdLabel, borderBottom: 'none' }}>Remarks</td><td style={{ ...tdValue, borderBottom: 'none' }}>{staff.remarks}</td></tr> : null}
+            </tbody>
+          </table>
+
+          {/* Date + Signatures */}
+          <div style={{ marginTop: '20px', fontSize: '10.5pt' }}>
+            <div style={{ marginBottom: '16px' }}><strong>Date:</strong> {printDate}</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <tbody>
+                <tr>
+                  <td style={{ width: '45%', paddingTop: '32px', borderTop: '1px solid #333', textAlign: 'center', fontSize: '10.5pt' }}>
+                    Employee Signature
+                  </td>
+                  <td style={{ width: '10%' }}></td>
+                  <td style={{ width: '45%', paddingTop: '32px', borderTop: '1px solid #333', textAlign: 'center', fontSize: '10.5pt' }}>
+                    Authorized Signatory<br />
+                    <span style={{ fontSize: '9pt', color: '#555' }}>AIILSG — WB Centre</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Page 2 footer */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '14px', fontSize: '9pt', color: '#555', borderTop: '1px solid #ddd', paddingTop: '6px' }}>
+            <span>AIILSG — WB Centre | Confidential</span>
+            <span>Page 2 of 2</span>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          ON-SCREEN MODAL — hidden during print via .staff-modal-overlay
+          ══════════════════════════════════════════════════════════════════ */}
+      <div className="staff-modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-start justify-center p-4 overflow-y-auto">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl my-8">
+          {/* AIILSG Letterhead Header */}
+          <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 rounded-t-2xl p-6 text-white relative">
+            <button onClick={onClose} className="no-print absolute top-4 right-4 p-2 hover:bg-white/20 rounded-xl transition-all">
+              <X size={18} />
+            </button>
+            <div className="text-center mb-5">
+              <p className="text-xs font-bold tracking-widest text-indigo-200 uppercase mb-1">All India Institute of Local Self Government</p>
+              <h2 className="text-xl font-bold tracking-wide">STAFF DETAILS</h2>
+              <div className="w-24 h-0.5 bg-white/40 mx-auto mt-2" />
+            </div>
+            <div className="flex items-start gap-6">
+              {/* Photo */}
+              <div className="w-[100px] h-[120px] rounded-xl border-4 border-white/40 bg-white/10 overflow-hidden flex items-center justify-center shrink-0 shadow-xl">
+                {staff.photo ? (
+                  <img src={staff.photo} alt={staff.fullName} className="w-full h-full object-cover" />
+                ) : (
+                  <div className={`w-full h-full bg-gradient-to-br ${avatarGradient(staff.id)} flex items-center justify-center text-3xl font-bold text-white`}>
+                    {initials(staff.fullName)}
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-2xl font-bold truncate">{staff.fullName}</h3>
+                <p className="text-indigo-200 mt-0.5">{staff.designation}</p>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 mt-3 text-sm">
+                  <div>
+                    <span className="text-indigo-300 text-xs">Employee ID</span>
+                    <p className="font-semibold">{staff.employeeID || '—'}</p>
+                  </div>
+                  <div>
+                    <span className="text-indigo-300 text-xs">Department</span>
+                    <p className="font-semibold">{staff.department || '—'}</p>
+                  </div>
+                  <div>
+                    <span className="text-indigo-300 text-xs">Status</span>
+                    <p><span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${statusColor(staff.employmentStatus)}`}>{staff.employmentStatus}</span></p>
+                  </div>
+                  <div>
+                    <span className="text-indigo-300 text-xs">Location</span>
+                    <p className="font-semibold">{staff.projectLocation || '—'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* All sections in one scrollable view */}
+          <div className="p-6 overflow-y-auto max-h-[65vh]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+
+              {/* Personal Details */}
+              <SectionTitle title="Personal Details" />
+              <InfoRow label="Full Name" value={staff.fullName} />
+              <InfoRow label="Father's / Husband's Name" value={staff.fatherName} />
+              <InfoRow label="Date of Birth" value={staff.dob ? formatDate(staff.dob) : ''} />
+              <InfoRow label="Age" value={staff.dob ? `${calcAge(staff.dob)} years` : ''} />
+              <InfoRow label="Gender" value={staff.gender} />
+              <InfoRow label="Marital Status" value={staff.maritalStatus} />
+              <InfoRow label="Blood Group" value={staff.bloodGroup} />
+              <InfoRow label="Religion" value={staff.religion} />
+              <InfoRow label="Category" value={staff.category} />
+              <InfoRow label="Nationality" value={staff.nationality} />
+
+              {/* Contact Details */}
+              <SectionTitle title="Contact Details" />
+              <InfoRow label="Mobile" value={staff.mobile} />
+              <InfoRow label="Alternate Mobile" value={staff.alternateMobile} />
+              <InfoRow label="Email" value={staff.email} />
+              <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
+                <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Current Address</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InfoRow label="Address" value={staff.currentAddress} />
+                  <InfoRow label="City" value={staff.currentCity} />
+                  <InfoRow label="State" value={staff.currentState} />
+                  <InfoRow label="PIN Code" value={staff.currentPIN} />
+                </div>
+              </div>
+              <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
+                <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Permanent Address</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InfoRow label="Address" value={staff.permanentAddress} />
+                  <InfoRow label="City" value={staff.permanentCity} />
+                  <InfoRow label="State" value={staff.permanentState} />
+                  <InfoRow label="PIN Code" value={staff.permanentPIN} />
+                </div>
+              </div>
+              <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
+                <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Emergency Contact</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <InfoRow label="Name" value={staff.emergencyName} />
+                  <InfoRow label="Number" value={staff.emergencyNumber} />
+                  <InfoRow label="Relation" value={staff.emergencyRelation} />
+                </div>
+              </div>
+
+              {/* Identity Documents */}
+              <SectionTitle title="Identity Documents" />
+              <div>
+                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aadhaar Number</span>
+                <p className="text-sm text-gray-800 dark:text-gray-200 font-medium mt-1 flex items-center gap-2">
+                  <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-lg text-xs font-bold">ID</span>
+                  {staff.aadhaarNumber || '—'}
+                </p>
+              </div>
+              <div>
+                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">PAN Number</span>
+                <p className="text-sm text-gray-800 dark:text-gray-200 font-medium mt-1 flex items-center gap-2">
+                  <span className="bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-400 px-2 py-0.5 rounded-lg text-xs font-bold">PAN</span>
+                  {staff.panNumber || '—'}
+                </p>
+              </div>
+              <InfoRow label="Passport Number" value={staff.passportNumber} />
+              <InfoRow label="Voter ID" value={staff.voterID} />
+              <InfoRow label="Driving License" value={staff.dlNumber} />
+              <InfoRow label="Other Document" value={staff.otherDocName} />
+
+              {/* Bank Details */}
+              <SectionTitle title="Bank Details" />
+              <InfoRow label="Bank Name" value={staff.bankName} />
+              <InfoRow label="Account Type" value={staff.accountType} />
+              <InfoRow label="Account Number" value={staff.accountNumber} />
+              <InfoRow label="IFSC Code" value={staff.ifscCode} />
+              <InfoRow label="Branch Name" value={staff.branchName} />
+
+              {/* Employment Details */}
+              <SectionTitle title="Employment Details" />
+              <InfoRow label="Employee ID" value={staff.employeeID} />
+              <InfoRow label="Designation" value={staff.designation} />
+              <InfoRow label="Department" value={staff.department} />
+              <InfoRow label="Employment Type" value={staff.employmentType} />
+              <InfoRow label="Employment Status" value={staff.employmentStatus} />
+              <InfoRow label="Joining Date" value={staff.joiningDate ? formatDate(staff.joiningDate) : ''} />
+              <InfoRow label="Resignation Date" value={staff.resignationDate ? formatDate(staff.resignationDate) : ''} />
+              <InfoRow label="Last Working Date" value={staff.lastWorkingDate ? formatDate(staff.lastWorkingDate) : ''} />
+              <InfoRow label="Qualification" value={staff.qualification} />
+              <InfoRow label="Experience" value={staff.experience ? `${staff.experience} years` : ''} />
+              <InfoRow label="Previous Organization" value={staff.previousOrg} />
+              <InfoRow label="Reporting Manager" value={staff.reportingManager} />
+              <InfoRow label="Project Location" value={staff.projectLocation} />
+              <InfoRow label="Working Days" value={fmtWorkingDays(staff.workingDays, staff.customWorkingDays)} />
+              <InfoRow label="Shift Timing" value={staff.shiftStart && staff.shiftEnd ? `${fmtTime(staff.shiftStart)} — ${fmtTime(staff.shiftEnd)}` : ''} />
+
+              {/* Salary Details */}
+              <SectionTitle title="Salary Details" />
+              <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+                <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 text-center">
+                  <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-1">Gross Salary</p>
+                  <p className="text-xl font-bold text-indigo-700 dark:text-indigo-300">{fmtCur(gross)}</p>
+                </div>
+                <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-center">
+                  <p className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wider mb-1">Deductions</p>
+                  <p className="text-xl font-bold text-red-700 dark:text-red-300">{fmtCur(deductions)}</p>
+                </div>
+                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 text-center">
+                  <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">Net Salary</p>
+                  <p className="text-xl font-bold text-emerald-700 dark:text-emerald-300">{fmtCur(net)}</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">Earnings</p>
+                <div className="space-y-1.5 text-sm">
+                  {[
+                    ['Basic Salary', staff.basicSalary],
+                    ['HRA', staff.hra],
+                    ['DA', staff.da],
+                    ['Conveyance', staff.conveyance],
+                    ['Medical', staff.medical],
+                    ['Special Allowance', staff.specialAllowance],
+                    ['Other Allowances', staff.otherAllowances],
+                  ].filter(([, v]) => Number(v) > 0).map(([label, val]) => (
+                    <div key={label} className="flex justify-between text-gray-700 dark:text-gray-300">
+                      <span>{label}</span><span className="font-semibold">{fmtCur(val)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">Deductions</p>
+                <div className="space-y-1.5 text-sm">
+                  {[
+                    ['PF', staff.pfDeduction],
+                    ['ESI', staff.esiDeduction],
+                    ['Professional Tax', staff.professionalTax],
+                    ['TDS', staff.tds],
+                    ['Other Deductions', staff.otherDeductions],
+                  ].filter(([, v]) => Number(v) > 0).map(([label, val]) => (
+                    <div key={label} className="flex justify-between text-gray-700 dark:text-gray-300">
+                      <span>{label}</span><span className="font-semibold text-red-600 dark:text-red-400">- {fmtCur(val)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Project Assignment */}
+              <SectionTitle title="Project Assignment" />
+              <div className="col-span-full">
+                <InfoRow label="Assigned Project" value={staff.assignedProject} />
+              </div>
+              <InfoRow label="Project Role" value={staff.projectRole} />
+              <InfoRow label="Project Site Location" value={staff.projectSiteLocation} />
+              <InfoRow label="HR Cost to Project (₹/month)" value={fmtCur(staff.hrCostToProject)} />
+              <InfoRow label="Assignment Start Date" value={staff.assignmentStart ? formatDate(staff.assignmentStart) : ''} />
+              <InfoRow label="Assignment End Date" value={staff.assignmentEnd ? formatDate(staff.assignmentEnd) : ''} />
+              <div className="col-span-full">
+                <InfoRow label="Remarks" value={staff.remarks} />
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="no-print flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 rounded-b-2xl">
+            <button onClick={onClose}
+              className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+              ← Back to Staff List
+            </button>
+            <div className="flex gap-3">
+              <button onClick={() => window.print()}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
+                <Printer size={14} /> Print
+              </button>
+              <button onClick={onEdit}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-all">
+                <Pencil size={14} /> Edit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 
