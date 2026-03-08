@@ -9,7 +9,7 @@ const LS_STAFF      = 'aiilsg_staff'
 const LS_HOLIDAYS   = 'aiilsg_holidays'
 const LS_ATTENDANCE = 'aiilsg_attendance'
 
-/** Casual Leave accrual rate per calendar month (1.5 days → floor to 1 usable day). */
+/** Casual Leave accrual: 1 day per calendar month. */
 const CL_PER_MONTH = 1
 
 const STATUS_OPTIONS = [
@@ -97,18 +97,21 @@ function formatMins(total) {
 
 function isRestDay(dateStr, staff) {
   const dow = new Date(dateStr).getDay() // 0=Sun
-  if (staff.rosterType === 'Monday to Friday') return dow === 0 || dow === 6
-  if (staff.rosterType === 'Monday to Saturday') return dow === 0
-  if (staff.rosterType === 'Custom') {
+  const roster = staff.rosterType || 'Monday to Friday'
+  if (roster === 'Monday to Friday') return dow === 0 || dow === 6
+  if (roster === 'Monday to Saturday') return dow === 0
+  if (roster === 'Custom') {
     return !(staff.customDays || []).includes(DAY_NAMES[dow])
   }
-  return false
+  // default to Mon-Fri
+  return dow === 0 || dow === 6
 }
 
 function getShiftName(staff) {
   if (!staff) return ''
+  const roster = staff.rosterType || 'Monday to Friday'
   const end = staff.shiftEnd || '18:00'
-  return `${staff.rosterType} | ${staff.shiftStart || '09:00'} – ${end}`
+  return `${roster} | ${staff.shiftStart || '09:00'} – ${end}`
 }
 
 function getRowBg(status) {

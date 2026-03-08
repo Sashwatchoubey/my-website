@@ -86,8 +86,8 @@ function calculateSlip(staff, year, month) {
       r.status === 'PRESENT' || r.status === 'CASUAL LEAVE' || r.status === 'SICK LEAVE',
     ).length + halfDays * 0.5
   } else {
-    const isMF  = (staff.rosterType || '').toLowerCase().includes('friday') &&
-                  !(staff.rosterType || '').toLowerCase().includes('saturday')
+    const roster = staff.rosterType || 'Monday to Friday'
+    const isMF  = roster === 'Monday to Friday'
     workingDays = isMF ? 22 : 26
     presentDays = workingDays
     absentDays  = 0
