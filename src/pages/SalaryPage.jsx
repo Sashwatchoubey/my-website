@@ -313,7 +313,7 @@ function GeneratorModal({ editSlip, onClose, onSaved, showToast }) {
       showToast('Please select a staff member and month first.', 'error')
       return
     }
-    const staff = staffList.find(s => s.id === form.staffId)
+    const staff = staffList.find(s => String(s.id) === String(form.staffId))
     if (!staff) return
 
     const att = computeAttendance(form.staffId, form.month)
@@ -352,7 +352,7 @@ function GeneratorModal({ editSlip, onClose, onSaved, showToast }) {
       return
     }
     setSaving(true)
-    const staff = staffList.find(s => s.id === form.staffId) || {}
+    const staff = staffList.find(s => String(s.id) === String(form.staffId)) || {}
     const id    = `${form.staffId}_${form.month}`
     const now   = new Date().toISOString()
     const existing = loadLS(LS_SALARY)
