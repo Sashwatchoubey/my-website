@@ -645,6 +645,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
     if (!file) return
     const reader = new FileReader()
     reader.onload = ev => set('photo', ev.target.result)
+    reader.onerror = () => alert('Failed to read image file. Please try again with a valid image.')
     reader.readAsDataURL(file)
   }
 
@@ -817,7 +818,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
                 className="hidden"
                 onChange={handlePhotoUpload}
               />
-              <p className="text-xs text-gray-400 text-center">Passport Size Photo<br />150×180px</p>
+              <p className="text-xs text-gray-400 text-center leading-relaxed">Passport Size Photo<span className="block">150×180px</span></p>
             </div>
           </div>
 
@@ -1166,7 +1167,7 @@ function StaffProfile({ staff, onClose, onEdit }) {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-start justify-center p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl my-8">
+      <div className="staff-print-area bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl my-8">
         {/* AIILSG Letterhead Header */}
         <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 rounded-t-2xl p-6 text-white relative">
           <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-xl transition-all">
