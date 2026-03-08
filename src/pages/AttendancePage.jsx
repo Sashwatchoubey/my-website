@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
   CalendarDays, Users, Plus, Trash2, Pencil, Save, Printer, X,
   ChevronRight, CheckCircle, AlertCircle, Clock, Calendar,
+  Download, Upload, FileSpreadsheet,
 } from 'lucide-react'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -61,10 +62,39 @@ function calcTotalHours(clockIn, clockOut) {
   return `${h}:${String(m).padStart(2, '0')}`
 }
 
+function getSaturdayOccurrence(dateStr) {
+  // Returns 1 for the 1st Saturday of the month, 2 for 2nd, etc.
+  const date = new Date(dateStr + 'T00:00:00')
+  const year  = date.getFullYear()
+  const month = date.getMonth()
+  const dayOfMonth = date.getDate()
+  let satCount = 0
+  for (let d = 1; d <= dayOfMonth; d++) {
+    if (new Date(year, month, d).getDay() === 6) satCount++
+  }
+  return satCount
+}
+
 function isRestDay(dateStr, workingDays, customWorkingDays) {
   const day = getDayShort(dateStr) // MON TUE WED THU FRI SAT SUN
   if (workingDays === 'Mon-Fri') return day === 'SAT' || day === 'SUN'
   if (workingDays === 'Mon-Sat') return day === 'SUN'
+  if (workingDays === 'Mon-Sat-2nd4thOff') {
+    if (day === 'SUN') return true
+    if (day === 'SAT') {
+      const occ = getSaturdayOccurrence(dateStr)
+      return occ === 2 || occ === 4
+    }
+    return false
+  }
+  if (workingDays === 'Mon-Sat-1st3rdOff') {
+    if (day === 'SUN') return true
+    if (day === 'SAT') {
+      const occ = getSaturdayOccurrence(dateStr)
+      return occ === 1 || occ === 3
+    }
+    return false
+  }
   if (workingDays === 'Custom') {
     const map = { MON: 'Mon', TUE: 'Tue', WED: 'Wed', THU: 'Thu', FRI: 'Fri', SAT: 'Sat', SUN: 'Sun' }
     return !(customWorkingDays || []).includes(map[day])
@@ -74,6 +104,8 @@ function isRestDay(dateStr, workingDays, customWorkingDays) {
 
 function getShiftLabel(workingDays) {
   if (workingDays === 'Mon-Sat') return 'MONDAY TO SATURDAY'
+  if (workingDays === 'Mon-Sat-2nd4thOff') return 'MON TO SAT (2ND & 4TH SATURDAY OFF)'
+  if (workingDays === 'Mon-Sat-1st3rdOff') return 'MON TO SAT (1ST & 3RD SATURDAY OFF)'
   if (workingDays === 'Custom') return 'CUSTOM SCHEDULE'
   return 'MONDAY TO FRIDAY'
 }
@@ -184,6 +216,14 @@ export default function AttendancePage() {
   // ── Holiday state ──
   const [holidays, setHolidays] = useState([])
   const [holidayModal, setHolidayModal] = useState(null) // null | 'add' | holiday-object
+
+  // ── Bulk upload state ──
+  const [bulkMonth, setBulkMonth] = useState(() => {
+    const now = new Date()
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  })
+  const [uploadSummary, setUploadSummary] = useState(null) // null | { pending, updatedData }
+  const fileInputRef = useRef(null)
 
   // ── Load from localStorage ──
   useEffect(() => {
@@ -359,6 +399,137 @@ export default function AttendancePage() {
     toast('Holiday deleted.')
   }
 
+  // ─── Bulk Upload Handlers ──────────────────────────────────────────────────
+
+  function handleDownloadTemplate() {
+    if (staffList.length === 0) {
+      toast('No staff members found. Please add staff first.', 'error')
+      return
+    }
+    const [year, month] = bulkMonth.split('-').map(Number)
+    const daysInMonth = new Date(year, month, 0).getDate()
+    const rows = ['Employee ID,Employee Name,Date (DD-MM-YYYY),Clock In (HH:MM),Clock Out (HH:MM)']
+    staffList.forEach(staff => {
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dd = String(d).padStart(2, '0')
+        const mm = String(month).padStart(2, '0')
+        rows.push(`${staff.employeeID || staff.id},${staff.fullName},${dd}-${mm}-${year},,`)
+      }
+    })
+    const csv = rows.join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `Attendance_Template_${String(month).padStart(2,'0')}_${year}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast('Template downloaded!')
+  }
+
+  function handleUploadCSV(e) {
+    const file = e.target.files[0]
+    if (!e.target.files || !file) return
+    // Reset the input so the same file can be re-uploaded if needed
+    e.target.value = ''
+    const reader = new FileReader()
+    reader.onload = ev => {
+      try {
+        const text = ev.target.result
+        const lines = text.split(/\r?\n/).filter(l => l.trim())
+        if (lines.length < 2) {
+          toast('CSV file is empty or has no data rows.', 'error')
+          return
+        }
+        // Skip header row
+        const dataRows = lines.slice(1)
+        const raw = localStorage.getItem(LS_ATTENDANCE)
+        const allData = raw ? JSON.parse(raw) : {}
+        let updatedCount = 0
+        let errorRows = 0
+
+        dataRows.forEach(line => {
+          // Robust CSV field parse: handles fields optionally wrapped in double-quotes
+          const cols = []
+          let current = ''
+          let inQuote = false
+          for (let ci = 0; ci < line.length; ci++) {
+            const ch = line[ci]
+            if (ch === '"') { inQuote = !inQuote }
+            else if (ch === ',' && !inQuote) { cols.push(current.trim()); current = '' }
+            else { current += ch }
+          }
+          cols.push(current.trim())
+
+          if (cols.length < 5) { errorRows++; return }
+          const [empId, , dateDMY, clockIn, clockOut] = cols
+          if (!empId || !dateDMY) { errorRows++; return }
+
+          // Parse date DD-MM-YYYY → YYYY-MM-DD
+          const parts = dateDMY.split('-')
+          if (parts.length !== 3) { errorRows++; return }
+          const [dd, mm, yyyy] = parts
+          const dateISO = `${yyyy}-${mm}-${dd}`
+          const yearMonth = `${yyyy}-${mm}`
+
+          // Find matching staff by employeeID or id
+          const staff = staffList.find(s =>
+            String(s.employeeID) === String(empId) || String(s.id) === String(empId)
+          )
+          if (!staff) { errorRows++; return }
+
+          const key = `${staff.id}_${yearMonth}`
+          if (!allData[key]) {
+            // Build default rows if not yet generated for this month
+            allData[key] = {
+              staffId: staff.id,
+              month: yearMonth,
+              ulbName: '',
+              project: staff.assignedProject || '',
+              remarks: '',
+              rows: buildDefaultRows(staff, yearMonth, holidays),
+            }
+          }
+
+          const rowIdx = allData[key].rows.findIndex(r => r.date === dateISO)
+          if (rowIdx === -1) return
+
+          // Only update times if values are provided and match HH:MM format
+          const validTime = t => t && /^\d{1,2}:\d{2}$/.test(t)
+          const hasIn  = validTime(clockIn)
+          const hasOut = validTime(clockOut)
+          if (hasIn || hasOut) {
+            const existing = allData[key].rows[rowIdx]
+            allData[key].rows[rowIdx] = {
+              ...existing,
+              ...(hasIn  ? { clockIn }  : {}),
+              ...(hasOut ? { clockOut } : {}),
+            }
+            updatedCount++
+          }
+        })
+
+        setUploadSummary({ pending: allData, updatedCount, errorRows })
+      } catch {
+        toast('Failed to parse CSV file. Please check the format.', 'error')
+      }
+    }
+    reader.readAsText(file)
+  }
+
+  function handleConfirmUpload() {
+    if (!uploadSummary) return
+    localStorage.setItem(LS_ATTENDANCE, JSON.stringify(uploadSummary.pending))
+    toast(`Upload confirmed! ${uploadSummary.updatedCount} record(s) updated.`)
+    setUploadSummary(null)
+    // Refresh current report view if open
+    if (reportData) {
+      const key = `${reportData.staffId}_${reportData.month}`
+      const existing = uploadSummary.pending[key]
+      if (existing) setReportData(existing)
+    }
+  }
+
   // ─── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -419,6 +590,14 @@ export default function AttendancePage() {
             onSave={handleSave}
             onPrint={handlePrint}
             updateRow={updateRow}
+            bulkMonth={bulkMonth}
+            setBulkMonth={setBulkMonth}
+            uploadSummary={uploadSummary}
+            setUploadSummary={setUploadSummary}
+            fileInputRef={fileInputRef}
+            onDownloadTemplate={handleDownloadTemplate}
+            onUploadCSV={handleUploadCSV}
+            onConfirmUpload={handleConfirmUpload}
           />
         ) : (
           <HolidaysTab
@@ -450,6 +629,10 @@ function AttendanceTab({
   selectedStaff, summary,
   holidaysInMonth, holidays,
   onGenerate, onSave, onPrint, updateRow,
+  bulkMonth, setBulkMonth,
+  uploadSummary, setUploadSummary,
+  fileInputRef,
+  onDownloadTemplate, onUploadCSV, onConfirmUpload,
 }) {
   return (
     <div className="space-y-5">
@@ -539,6 +722,95 @@ function AttendanceTab({
           />
         </div>
       )}
+
+      {/* ── Bulk Upload Section ── */}
+      <div className="no-print bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-indigo-100 dark:border-indigo-900/40 overflow-hidden">
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-3 flex items-center gap-2">
+          <FileSpreadsheet size={16} className="text-white" />
+          <h3 className="text-sm font-bold text-white tracking-wide uppercase">
+            Bulk Upload — Clock In / Clock Out Data
+          </h3>
+        </div>
+
+        <div className="p-5">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+            Download the CSV template, fill in the Clock In &amp; Clock Out times in Excel or any
+            spreadsheet app, then upload it here to update all staff attendance at once.
+          </p>
+
+          <div className="flex flex-wrap items-end gap-3 mb-4">
+            <div className="min-w-[160px]">
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
+                Month
+              </label>
+              <input
+                type="month"
+                value={bulkMonth}
+                onChange={e => setBulkMonth(e.target.value)}
+                className={inputCls}
+              />
+            </div>
+
+            <button
+              onClick={onDownloadTemplate}
+              className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-700 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-xl transition-colors"
+            >
+              <Download size={15} />
+              Download Template
+            </button>
+
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-xl transition-colors"
+            >
+              <Upload size={15} />
+              Upload CSV
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv,text/csv"
+              className="hidden"
+              onChange={onUploadCSV}
+            />
+          </div>
+
+          {/* Upload Preview / Confirm */}
+          {uploadSummary && (
+            <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300 mb-1">
+                    ✅ Preview ready — {uploadSummary.updatedCount} clock-in/out record(s) found
+                    {uploadSummary.errorRows > 0 && (
+                      <span className="text-amber-600 dark:text-amber-400 ml-2">
+                        ({uploadSummary.errorRows} row(s) skipped)
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400">
+                    Click Confirm to save all updates to localStorage. Existing status values are preserved.
+                  </p>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <button
+                    onClick={onConfirmUpload}
+                    className="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-colors"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    onClick={() => setUploadSummary(null)}
+                    className="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
