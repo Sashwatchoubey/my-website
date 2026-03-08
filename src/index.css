@@ -82,20 +82,70 @@
   transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Print styles — hide sidebar/header, only show modal content */
+/* ── Global Print Styles ─────────────────────────────────────────────────── */
 @media print {
-  body > * { display: none !important; }
-  .staff-print-area,
-  .staff-print-area * { display: revert !important; }
-  .staff-print-area {
-    position: fixed !important;
-    inset: 0 !important;
+  /* Hide layout chrome */
+  aside, nav, header,
+  [class*="sidebar"], [class*="topbar"],
+  .no-print { display: none !important; }
+
+  /* Hide modal overlay backdrop */
+  .print-hide-wrapper {
+    position: static !important;
+    background: none !important;
+    backdrop-filter: none !important;
+    display: block !important;
     overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  /* Hide action buttons / UI controls in print */
+  .print-hide { display: none !important; }
+
+  /* Reset body so the print-area fills the page */
+  body { background: white !important; margin: 0 !important; }
+
+  /* Make the main content wrapper full width */
+  main, [class*="main-content"] { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+
+  /* ── Staff Details print area ── */
+  .staff-print-area {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     background: white !important;
-    z-index: 9999 !important;
-    padding: 24px !important;
-    max-height: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
   }
   .staff-print-area .overflow-y-auto { overflow: visible !important; max-height: none !important; }
-  .staff-print-area .rounded-b-2xl { display: none !important; }
+
+  /* ── Generic print area (Attendance / Salary) ── */
+  .print-area {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+  .print-area .overflow-y-auto,
+  .print-area .overflow-x-auto { overflow: visible !important; max-height: none !important; }
+
+  /* Page setup */
+  @page { margin: 12mm; size: A4 portrait; }
+
+  /* Force color fidelity */
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Avoid page-breaks inside table rows */
+  tr { page-break-inside: avoid; }
+
+  /* Print-only elements */
+  .print-show { display: block !important; }
 }
