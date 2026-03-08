@@ -1130,9 +1130,11 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
             <SecHeader title="Working Days / Roster" icon={Clock} />
             <Field label="Working Schedule">
               <select className={selectCls} value={form.workingDays} onChange={e => set('workingDays', e.target.value)}>
-                <option value="Mon-Fri">Monday to Friday</option>
-                <option value="Mon-Sat">Monday to Saturday</option>
-                <option value="Custom">Custom</option>
+                <option value="Mon-Fri">Monday to Friday (5 days)</option>
+                <option value="Mon-Sat">Monday to Saturday (6 days)</option>
+                <option value="Mon-Sat-2nd4thOff">Mon to Sat (2nd &amp; 4th Saturday Off)</option>
+                <option value="Mon-Sat-1st3rdOff">Mon to Sat (1st &amp; 3rd Saturday Off)</option>
+                <option value="Custom">Custom Working Days</option>
               </select>
             </Field>
             <Field label="Shift Timing">
