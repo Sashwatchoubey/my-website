@@ -5,7 +5,7 @@ import {
   Search, Plus, X, Pencil, Trash2, Eye, CheckCircle, AlertCircle,
   LayoutGrid, List, User, Phone,
   MapPin, Briefcase, CreditCard, Building2, IndianRupee,
-  FileText, Users, Filter, Printer,
+  FileText, Users, Filter, Printer, Clock, CalendarDays,
 } from 'lucide-react'
 
 
@@ -541,6 +541,13 @@ function emptyForm() {
     pfDeduction: '', esiDeduction: '', professionalTax: '', tds: '', otherDeductions: '',
     assignedProject: '', projectRole: '', projectSiteLocation: '',
     hrCostToProject: '', assignmentStart: '', assignmentEnd: '', remarks: '',
+    // Roster / Working Days
+    workingDays: 'Mon-Fri',
+    customWorkingDays: [],
+    shiftStart: '10:00',
+    shiftEnd: '18:00',
+    // Local Holidays
+    localHolidays: [],
   }
 }
 
@@ -1118,6 +1125,93 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
             <Field label="Assignment End Date">
               <input type="date" className={inputCls} value={form.assignmentEnd} onChange={e => set('assignmentEnd', e.target.value)} />
             </Field>
+
+            {/* Working Days / Roster */}
+            <SecHeader title="Working Days / Roster" icon={Clock} />
+            <Field label="Working Schedule">
+              <select className={selectCls} value={form.workingDays} onChange={e => set('workingDays', e.target.value)}>
+                <option value="Mon-Fri">Monday to Friday</option>
+                <option value="Mon-Sat">Monday to Saturday</option>
+                <option value="Custom">Custom</option>
+              </select>
+            </Field>
+            <Field label="Shift Timing">
+              <div className="flex items-center gap-2">
+                <input type="time" className={inputCls} value={form.shiftStart} onChange={e => set('shiftStart', e.target.value)} />
+                <span className="text-gray-400 text-sm shrink-0">to</span>
+                <input type="time" className={inputCls} value={form.shiftEnd} onChange={e => set('shiftEnd', e.target.value)} />
+              </div>
+            </Field>
+            {form.workingDays === 'Custom' && (
+              <div className="col-span-full">
+                <Field label="Select Working Days">
+                  <div className="flex flex-wrap gap-3 mt-1">
+                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => {
+                      const checked = (form.customWorkingDays || []).includes(day)
+                      return (
+                        <label key={day} className="flex items-center gap-1.5 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => {
+                              const current = form.customWorkingDays || []
+                              set('customWorkingDays', checked ? current.filter(d => d !== day) : [...current, day])
+                            }}
+                            className="w-4 h-4 rounded text-indigo-600"
+                          />
+                          <span className="text-sm text-gray-700 dark:text-gray-300">{day}</span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                </Field>
+              </div>
+            )}
+
+            {/* Local Holidays */}
+            <SecHeader title="Local Holidays (Staff-Specific)" icon={CalendarDays} />
+            <div className="col-span-full">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">These holidays apply only to this staff member's attendance.</p>
+              {(form.localHolidays || []).map((lh, idx) => (
+                <div key={idx} className="flex gap-2 mb-2 items-center">
+                  <input
+                    type="date"
+                    className={inputCls + ' flex-1'}
+                    value={lh.date}
+                    onChange={e => {
+                      const updated = [...(form.localHolidays || [])]
+                      updated[idx] = { ...updated[idx], date: e.target.value }
+                      set('localHolidays', updated)
+                    }}
+                  />
+                  <input
+                    type="text"
+                    className={inputCls + ' flex-[2]'}
+                    value={lh.name}
+                    placeholder="Holiday name"
+                    onChange={e => {
+                      const updated = [...(form.localHolidays || [])]
+                      updated[idx] = { ...updated[idx], name: e.target.value }
+                      set('localHolidays', updated)
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => set('localHolidays', (form.localHolidays || []).filter((_, i) => i !== idx))}
+                    className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all shrink-0"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => set('localHolidays', [...(form.localHolidays || []), { date: '', name: '' }])}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl border border-dashed border-indigo-300 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 text-sm font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"
+              >
+                <Plus size={14} /> Add Local Holiday
+              </button>
+            </div>
             <div className="col-span-full">
               <Field label="Remarks">
                 <textarea className={inputCls} rows={3} value={form.remarks} onChange={e => set('remarks', e.target.value)} placeholder="Additional notes or remarks" />

@@ -82,9 +82,12 @@
   transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Print styles — hide sidebar/header, only show modal content */
+/* Print styles — hide sidebar/header, only show printable content */
 @media print {
+  /* Hide everything by default */
   body > * { display: none !important; }
+
+  /* Show staff print area */
   .staff-print-area,
   .staff-print-area * { display: revert !important; }
   .staff-print-area {
@@ -92,10 +95,61 @@
     inset: 0 !important;
     overflow: visible !important;
     background: white !important;
+    color: black !important;
     z-index: 9999 !important;
-    padding: 24px !important;
+    padding: 20px !important;
     max-height: none !important;
+    font-size: 11pt !important;
   }
   .staff-print-area .overflow-y-auto { overflow: visible !important; max-height: none !important; }
   .staff-print-area .rounded-b-2xl { display: none !important; }
+
+  /* Show attendance print area */
+  .attendance-print-area,
+  .attendance-print-area * { display: revert !important; }
+  .attendance-print-area {
+    position: fixed !important;
+    inset: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+    z-index: 9999 !important;
+    padding: 10mm !important;
+    max-height: none !important;
+    font-size: 9pt !important;
+  }
+
+  /* Show salary print area */
+  .salary-print-area,
+  .salary-print-area * { display: revert !important; }
+  .salary-print-area {
+    position: fixed !important;
+    inset: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+    z-index: 9999 !important;
+    padding: 20px !important;
+    max-height: none !important;
+    font-size: 11pt !important;
+  }
+
+  /* Force white backgrounds and black text for all print areas */
+  .staff-print-area *,
+  .attendance-print-area *,
+  .salary-print-area * {
+    background-color: transparent !important;
+    color: black !important;
+    border-color: #ccc !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Re-apply specific background colours for table headers */
+  .print-header-bg { background-color: #1e3a8a !important; color: white !important; }
+  .print-table-header { background-color: #e5e7eb !important; color: black !important; }
+
+  /* Page breaks */
+  .print-page-break { page-break-after: always !important; }
+  .no-print { display: none !important; }
 }

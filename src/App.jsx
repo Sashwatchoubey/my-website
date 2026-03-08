@@ -4,6 +4,8 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import ProjectsPage from './pages/ProjectsPage'
 import StaffPage from './pages/StaffPage'
+import AttendancePage from './pages/AttendancePage'
+import SalaryPage from './pages/SalaryPage'
 import Layout from './components/Layout/Layout'
 
 function ProtectedRoute({ children }) {
@@ -28,6 +30,8 @@ function AppRoutes() {
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="projects" element={<ProjectsPage />} />
         <Route path="staff" element={<StaffPage />} />
+        <Route path="attendance" element={<AttendancePage />} />
+        <Route path="salary" element={<SalaryPage />} />
         <Route path="*" element={
           <div className="flex flex-col items-center justify-center h-96 text-gray-500 dark:text-gray-400">
             <div className="text-6xl mb-4">🚧</div>
