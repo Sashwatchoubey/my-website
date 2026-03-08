@@ -449,8 +449,18 @@ export default function AttendancePage() {
         let errorRows = 0
 
         dataRows.forEach(line => {
-          // Minimal CSV parse: handle quoted fields
-          const cols = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''))
+          // Robust CSV field parse: handles fields optionally wrapped in double-quotes
+          const cols = []
+          let current = ''
+          let inQuote = false
+          for (let ci = 0; ci < line.length; ci++) {
+            const ch = line[ci]
+            if (ch === '"') { inQuote = !inQuote }
+            else if (ch === ',' && !inQuote) { cols.push(current.trim()); current = '' }
+            else { current += ch }
+          }
+          cols.push(current.trim())
+
           if (cols.length < 5) { errorRows++; return }
           const [empId, , dateDMY, clockIn, clockOut] = cols
           if (!empId || !dateDMY) { errorRows++; return }
@@ -466,7 +476,7 @@ export default function AttendancePage() {
           const staff = staffList.find(s =>
             String(s.employeeID) === String(empId) || String(s.id) === String(empId)
           )
-          if (!staff) return
+          if (!staff) { errorRows++; return }
 
           const key = `${staff.id}_${yearMonth}`
           if (!allData[key]) {
@@ -484,11 +494,19 @@ export default function AttendancePage() {
           const rowIdx = allData[key].rows.findIndex(r => r.date === dateISO)
           if (rowIdx === -1) return
 
-          const row = allData[key].rows[rowIdx]
-          // Only update times if values are provided and not empty
+          // Only update times if values are provided and match HH:MM format
           const validTime = t => t && /^\d{1,2}:\d{2}$/.test(t)
-          if (validTime(clockIn))  { allData[key].rows[rowIdx] = { ...row, clockIn }; updatedCount++ }
-          if (validTime(clockOut)) { allData[key].rows[rowIdx] = { ...allData[key].rows[rowIdx], clockOut } }
+          const hasIn  = validTime(clockIn)
+          const hasOut = validTime(clockOut)
+          if (hasIn || hasOut) {
+            const existing = allData[key].rows[rowIdx]
+            allData[key].rows[rowIdx] = {
+              ...existing,
+              ...(hasIn  ? { clockIn }  : {}),
+              ...(hasOut ? { clockOut } : {}),
+            }
+            updatedCount++
+          }
         })
 
         setUploadSummary({ pending: allData, updatedCount, errorRows })
