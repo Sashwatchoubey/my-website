@@ -1235,8 +1235,10 @@ const PRINT_TABLE_STYLE = {
   pageBreakInside: 'avoid', breakInside: 'avoid',
 }
 const PRINT_PAGE_HEADER = {
-  borderBottom: '3px solid #1e3a8a', marginBottom: '14px',
-  paddingBottom: '8px', textAlign: 'center',
+  backgroundColor: '#000', color: '#fff',
+  padding: '12px 16px', marginBottom: '14px',
+  textAlign: 'center',
+  pageBreakInside: 'avoid', breakInside: 'avoid',
 }
 
 // ─── Staff Profile View ───────────────────────────────────────────────────────
@@ -1307,10 +1309,10 @@ function StaffProfile({ staff, onClose, onEdit }) {
         <div>
           {/* Header */}
           <div style={pageHeaderStyle}>
-            <div style={{ fontSize: '15pt', fontWeight: 'bold', color: '#1e3a8a', letterSpacing: '0.5px' }}>
+            <div style={{ fontSize: '15pt', fontWeight: 'bold', color: '#fff', letterSpacing: '0.5px' }}>
               ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT
             </div>
-            <div style={{ fontSize: '12pt', fontWeight: 'bold', marginTop: '4px', letterSpacing: '1px' }}>EMPLOYEE DETAILS</div>
+            <div style={{ fontSize: '12pt', fontWeight: 'bold', marginTop: '4px', letterSpacing: '1px', color: '#fff' }}>EMPLOYEE DETAILS</div>
           </div>
 
           {/* Personal Info + Photo side by side */}
@@ -1338,7 +1340,7 @@ function StaffProfile({ staff, onClose, onEdit }) {
                 </td>
                 {/* Photo */}
                 <td style={{ verticalAlign: 'top', textAlign: 'center', width: '30%' }}>
-                  <div style={{ border: '2px solid #333', display: 'inline-block', padding: '4px', marginTop: '4px' }}>
+                  <div style={{ border: '2px solid #333', display: 'inline-block', padding: '4px', marginTop: '4px', pageBreakInside: 'avoid', breakInside: 'avoid', overflow: 'hidden' }}>
                     {staff.photo ? (
                       <img
                         src={staff.photo}
@@ -1413,10 +1415,10 @@ function StaffProfile({ staff, onClose, onEdit }) {
         <div>
           {/* Header */}
           <div style={pageHeaderStyle}>
-            <div style={{ fontSize: '15pt', fontWeight: 'bold', color: '#1e3a8a', letterSpacing: '0.5px' }}>
+            <div style={{ fontSize: '15pt', fontWeight: 'bold', color: '#fff', letterSpacing: '0.5px' }}>
               ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT
             </div>
-            <div style={{ fontSize: '12pt', fontWeight: 'bold', marginTop: '4px', letterSpacing: '1px' }}>EMPLOYEE DETAILS (Continued)</div>
+            <div style={{ fontSize: '12pt', fontWeight: 'bold', marginTop: '4px', letterSpacing: '1px', color: '#fff' }}>EMPLOYEE DETAILS (Continued)</div>
           </div>
 
           {/* Employment Details */}
