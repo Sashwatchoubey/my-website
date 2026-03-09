@@ -2,12 +2,12 @@ import { useNavigate } from 'react-router-dom'
 import { FolderPlus, UserPlus, Receipt, BarChart3, CalendarCheck, Download } from 'lucide-react'
 
 const actions = [
-  { icon: FolderPlus,    label: 'New Project',  color: 'from-indigo-500 to-purple-600', path: '/projects' },
+  { icon: FolderPlus,    label: 'New Project',  color: 'from-orange-500 to-orange-600', path: '/projects' },
   { icon: UserPlus,      label: 'Add Staff',    color: 'from-emerald-500 to-teal-600',  path: '/manpower' },
   { icon: Receipt,       label: 'New Invoice',  color: 'from-orange-500 to-amber-500',  path: '/invoicing' },
   { icon: BarChart3,     label: 'Expenses',     color: 'from-pink-500 to-rose-600',     path: '/expenses' },
   { icon: CalendarCheck, label: 'Attendance',   color: 'from-cyan-500 to-blue-600',     path: '/attendance' },
-  { icon: Download,      label: 'Reports',      color: 'from-violet-500 to-indigo-600', path: '/pnl' },
+  { icon: Download,      label: 'Reports',      color: 'from-orange-500 to-orange-600', path: '/pnl' },
 ]
 
 export default function QuickActions() {
