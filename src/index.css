@@ -128,15 +128,21 @@
 
   /* Explicit page break between print pages */
   .staff-print-page-break {
-    page-break-after: always !important;
-    break-after: always !important;
+    page-break-before: always !important;
+    break-before: page !important;
+    display: block !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
   }
 
   /* Staff photo — no cropping */
   .staff-photo-print {
-    width: 100% !important;
-    height: 100% !important;
+    width: 120px !important;
+    height: 150px !important;
     object-fit: contain !important;
+    display: block !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
