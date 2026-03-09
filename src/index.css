@@ -128,15 +128,15 @@
 
   /* Explicit page break between print pages */
   .staff-print-page-break {
-    page-break-before: always !important;
-    break-before: always !important;
+    page-break-after: always !important;
+    break-after: always !important;
   }
 
   /* Staff photo — no cropping */
   .staff-photo-print {
-    width: 120px !important;
-    height: 150px !important;
-    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
@@ -199,7 +199,7 @@
   }
 
   /* ── 5. Shared print utilities ────────────────────────────────────────────── */
-  .print-header-bg { background-color: #1e3a8a !important; color: white !important; }
+  .print-header-bg { background-color: #000 !important; color: white !important; }
   .print-table-header { background-color: #e5e7eb !important; color: black !important; }
 
   /* Page breaks */
