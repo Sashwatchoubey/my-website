@@ -1,9 +1,28 @@
+import { useState } from 'react'
+
 /**
  * AIILSG Logo Component
- * SVG representation of the All India Institute of Local Self Government branding.
+ * Renders the real logo image from /aiilsg-logo.png when available,
+ * falling back to an SVG representation if the image fails to load.
  * Established 1926 – one of India's oldest institutions in local governance.
  */
 export default function AiilsgLogo({ size = 40, className = '' }) {
+  const [imgError, setImgError] = useState(false)
+
+  if (!imgError) {
+    return (
+      <img
+        src="/aiilsg-logo.png"
+        alt="AIILSG Logo"
+        width={size}
+        height={size}
+        className={className}
+        style={{ width: size, height: size, objectFit: 'contain' }}
+        onError={() => setImgError(true)}
+      />
+    )
+  }
+
   return (
     <svg
       width={size}
@@ -18,8 +37,8 @@ export default function AiilsgLogo({ size = 40, className = '' }) {
       {/* Circular gradient background */}
       <defs>
         <linearGradient id="aiilsg-bg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#6366f1" />
-          <stop offset="100%" stopColor="#9333ea" />
+          <stop offset="0%" stopColor="#f97316" />
+          <stop offset="100%" stopColor="#ea580c" />
         </linearGradient>
         <linearGradient id="aiilsg-shine" x1="0" y1="0" x2="80" y2="40" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#ffffff" stopOpacity="0.2" />

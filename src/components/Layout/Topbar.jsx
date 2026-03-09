@@ -49,7 +49,7 @@ export default function Topbar({ onMenuClick }) {
       </div>
 
       {/* Search */}
-      <div className={`hidden sm:flex items-center gap-2 ml-auto bg-gray-50 dark:bg-gray-800 border ${searchFocused ? 'border-indigo-400 ring-2 ring-indigo-100 dark:ring-indigo-900' : 'border-gray-200 dark:border-gray-700'} rounded-xl px-3 py-2 transition-all w-64`}>
+      <div className={`hidden sm:flex items-center gap-2 ml-auto bg-gray-50 dark:bg-gray-800 border ${searchFocused ? 'border-orange-400 ring-2 ring-orange-100 dark:ring-orange-900' : 'border-gray-200 dark:border-gray-700'} rounded-xl px-3 py-2 transition-all w-64`}>
         <Search size={15} className="text-gray-400 shrink-0" />
         <input
           type="text"
@@ -83,7 +83,7 @@ export default function Topbar({ onMenuClick }) {
             onClick={() => setDropdownOpen(d => !d)}
             className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
               {user?.avatar}
             </div>
             <span className="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-300 max-w-[120px] truncate">

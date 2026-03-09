@@ -1285,6 +1285,8 @@ function StaffProfile({ staff, onClose, onEdit }) {
     const esc = (v) => String(v == null ? '' : v)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
     const v = (val) => esc(val) || '—'
+    const logoUrl = '/aiilsg-logo.png'
+    const logoHtml = `<img src="${logoUrl}" alt="AIILSG" style="width:48px;height:48px;object-fit:contain;flex-shrink:0;" onerror="this.style.display='none'" />`
 
     const earningsList = [
       ['Basic Salary', staff.basicSalary],
@@ -1328,8 +1330,8 @@ function StaffProfile({ staff, onClose, onEdit }) {
       : '—'
     const safePhoto = staff.photo && /^(https?:|data:image\/)/.test(staff.photo) ? staff.photo : ''
     const photoHtml = safePhoto
-      ? `<img src="${esc(safePhoto)}" alt="Employee Photo" style="width:120px;height:150px;object-fit:contain;display:block;" />`
-      : `<div style="width:120px;height:150px;background:#e5e7eb;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;font-size:9pt;color:#6b7280;">No Photo</div>`
+      ? `<img src="${esc(safePhoto)}" alt="Employee Photo" style="width:140px;height:175px;object-fit:contain;display:block;" />`
+      : `<div style="width:140px;height:175px;background:#e5e7eb;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;font-size:9pt;color:#6b7280;">No Photo</div>`
     const remarksRow = staff.remarks
       ? `<tr><td class="lbl" style="border-bottom:none;">Remarks</td><td class="val" style="border-bottom:none;">${esc(staff.remarks)}</td></tr>`
       : ''
@@ -1344,14 +1346,15 @@ function StaffProfile({ staff, onClose, onEdit }) {
     body { font-family: Arial, Helvetica, sans-serif; font-size: 9pt; color: #000; background: #fff; }
     @page { size: A4; margin: 10mm 10mm; }
     .page-break { page-break-before: always; }
-    .header { background-color: #000 !important; color: #fff !important; padding: 8px 12px; text-align: center; margin-bottom: 10px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .header { background-color: #000 !important; color: #fff !important; padding: 8px 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .header-text { flex: 1; text-align: center; }
     .header h1 { font-size: 13pt; font-weight: bold; color: #fff !important; letter-spacing: 0.5px; }
     .header h2 { font-size: 10pt; font-weight: bold; margin-top: 3px; letter-spacing: 1px; color: #fff !important; }
     table { width: 100%; border-collapse: collapse; border: 1px solid #bbb; margin-bottom: 6px; }
     .sec-hdr th { background-color: #1e3a8a !important; color: #fff !important; padding: 4px 8px; font-weight: bold; font-size: 10pt; text-align: left; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .lbl { padding: 3px 8px; font-weight: bold; font-size: 9pt; border-bottom: 1px solid #ddd; width: 38%; vertical-align: top; background-color: #f8fafc; color: #000; }
     .val { padding: 3px 8px; font-size: 9pt; border-bottom: 1px solid #ddd; color: #000; }
-    .photo-box { width: 120px; height: 150px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f0f0f0; margin: 4px auto 0; }
+    .photo-box { width: 150px; height: 188px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f0f0f0; margin: 4px auto 0; }
     .footer-bar { display: flex; justify-content: space-between; margin-top: 6px; font-size: 8pt; color: #555; border-top: 1px solid #ddd; padding-top: 4px; }
   </style>
 </head>
@@ -1359,8 +1362,11 @@ function StaffProfile({ staff, onClose, onEdit }) {
   <!-- PAGE 1 -->
   <div>
     <div class="header">
-      <h1>ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT</h1>
-      <h2>EMPLOYEE DETAILS</h2>
+      ${logoHtml}
+      <div class="header-text">
+        <h1>ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT</h1>
+        <h2>West Bengal Centre — Employee Details</h2>
+      </div>
     </div>
 
     <table style="border:none;margin-bottom:6px;">
@@ -1424,8 +1430,11 @@ function StaffProfile({ staff, onClose, onEdit }) {
   <!-- PAGE 2 -->
   <div class="page-break">
     <div class="header">
-      <h1>ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT</h1>
-      <h2>EMPLOYEE DETAILS (Continued)</h2>
+      ${logoHtml}
+      <div class="header-text">
+        <h1>ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT</h1>
+        <h2>EMPLOYEE DETAILS (Continued)</h2>
+      </div>
     </div>
 
     <table>
@@ -1493,20 +1502,19 @@ function StaffProfile({ staff, onClose, onEdit }) {
       </tbody>
     </table>
 
-    <div style="margin-top:14px;font-size:9pt;">
+    <div style="margin-top:80px;font-size:9pt;">
       <div style="margin-bottom:10px;"><strong>Date:</strong> ${esc(printDate)}</div>
-      <table style="border:none;">
-        <tbody>
-          <tr>
-            <td style="width:45%;padding-top:20px;border-top:1px solid #333;border-bottom:none;border-left:none;border-right:none;text-align:center;font-size:9pt;">Employee Signature</td>
-            <td style="width:10%;border:none;"></td>
-            <td style="width:45%;padding-top:20px;border-top:1px solid #333;border-bottom:none;border-left:none;border-right:none;text-align:center;font-size:9pt;">
-              Authorized Signatory<br>
-              <span style="font-size:8pt;color:#555;">AIILSG — WB Centre</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div style="display:flex;justify-content:space-between;margin-top:60px;">
+        <div style="text-align:center;">
+          <div style="width:220px;border-top:1px solid #333;padding-top:8px;font-size:9pt;">Employee Signature</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:220px;border-top:1px solid #333;padding-top:8px;font-size:9pt;">
+            Authorized Signatory<br>
+            <span style="font-size:8pt;color:#555;">AIILSG — WB Centre</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="footer-bar" style="margin-top:14px;">
