@@ -1280,6 +1280,259 @@ function StaffProfile({ staff, onClose, onEdit }) {
 
   const printDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' })
 
+  // ── New-window print function ────────────────────────────────────────────────
+  function handlePrint() {
+    const esc = (v) => String(v == null ? '' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+    const v = (val) => esc(val) || '—'
+
+    const earningsList = [
+      ['Basic Salary', staff.basicSalary],
+      ['HRA', staff.hra],
+      ['DA', staff.da],
+      ['Conveyance', staff.conveyance],
+      ['Medical', staff.medical],
+      ['Special Allowance', staff.specialAllowance],
+      ['Other Allowances', staff.otherAllowances],
+    ].filter(([, val]) => Number(val) > 0)
+
+    const deductionList = [
+      ['PF', staff.pfDeduction],
+      ['ESI', staff.esiDeduction],
+      ['Professional Tax', staff.professionalTax],
+      ['TDS', staff.tds],
+      ['Other Deductions', staff.otherDeductions],
+    ].filter(([, val]) => Number(val) > 0)
+
+    const maxRows = Math.max(earningsList.length, deductionList.length, 1)
+    const earnPadded = [...earningsList, ...Array(maxRows - earningsList.length).fill(['', ''])]
+    const dedPadded = [...deductionList, ...Array(maxRows - deductionList.length).fill(['', ''])]
+
+    const salaryRows = earnPadded.map(([elabel, eamt], i) => {
+      const [dlabel, damt] = dedPadded[i] || ['', '']
+      return `<tr>
+        <td style="padding:4px 10px;border:1px solid #ddd;font-size:10.5pt;">${esc(elabel)}</td>
+        <td style="padding:4px 10px;border:1px solid #ddd;font-size:10.5pt;text-align:right;">${eamt ? esc(fmtCur(eamt)) : ''}</td>
+        <td style="padding:4px 10px;border:1px solid #ddd;font-size:10.5pt;">${esc(dlabel)}</td>
+        <td style="padding:4px 10px;border:1px solid #ddd;font-size:10.5pt;text-align:right;">${damt ? esc(fmtCur(damt)) : ''}</td>
+      </tr>`
+    }).join('')
+
+    const contactAddr = esc([staff.currentAddress, staff.currentCity, staff.currentState, staff.currentPIN].filter(Boolean).join(', '))
+    const permanentAddr = esc([staff.permanentAddress, staff.permanentCity, staff.permanentState, staff.permanentPIN].filter(Boolean).join(', '))
+    const emergency = staff.emergencyName
+      ? esc(`${staff.emergencyName}${staff.emergencyRelation ? ` (${staff.emergencyRelation})` : ''}${staff.emergencyNumber ? ` — ${staff.emergencyNumber}` : ''}`)
+      : '—'
+    const shiftTiming = staff.shiftStart && staff.shiftEnd
+      ? esc(`${fmtTime(staff.shiftStart)} — ${fmtTime(staff.shiftEnd)}`)
+      : '—'
+    const safePhoto = staff.photo && /^(https?:|data:image\/)/.test(staff.photo) ? staff.photo : ''
+    const photoHtml = safePhoto
+      ? `<img src="${esc(safePhoto)}" alt="Employee Photo" style="width:120px;height:150px;object-fit:contain;display:block;" />`
+      : `<div style="width:120px;height:150px;background:#e5e7eb;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;font-size:9pt;color:#6b7280;">No Photo</div>`
+    const remarksRow = staff.remarks
+      ? `<tr><td class="lbl" style="border-bottom:none;">Remarks</td><td class="val" style="border-bottom:none;">${esc(staff.remarks)}</td></tr>`
+      : ''
+
+    const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Employee Details - ${esc(staff.fullName)}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; color: #000; background: #fff; }
+    @page { size: A4; margin: 15mm 12mm; }
+    .page-break { page-break-before: always; }
+    .header { background-color: #000 !important; color: #fff !important; padding: 12px 16px; text-align: center; margin-bottom: 14px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .header h1 { font-size: 15pt; font-weight: bold; color: #fff !important; letter-spacing: 0.5px; }
+    .header h2 { font-size: 12pt; font-weight: bold; margin-top: 4px; letter-spacing: 1px; color: #fff !important; }
+    table { width: 100%; border-collapse: collapse; border: 1px solid #bbb; margin-bottom: 10px; }
+    .sec-hdr th { background-color: #1e3a8a !important; color: #fff !important; padding: 6px 10px; font-weight: bold; font-size: 11pt; text-align: left; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .lbl { padding: 5px 10px; font-weight: bold; font-size: 10.5pt; border-bottom: 1px solid #ddd; width: 38%; vertical-align: top; background-color: #f8fafc; color: #000; }
+    .val { padding: 5px 10px; font-size: 10.5pt; border-bottom: 1px solid #ddd; color: #000; }
+    .photo-box { width: 130px; height: 162px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f0f0f0; margin: 4px auto 0; }
+    .footer-bar { display: flex; justify-content: space-between; margin-top: 8px; font-size: 9pt; color: #555; border-top: 1px solid #ddd; padding-top: 6px; }
+  </style>
+</head>
+<body>
+  <!-- PAGE 1 -->
+  <div>
+    <div class="header">
+      <h1>ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT</h1>
+      <h2>EMPLOYEE DETAILS</h2>
+    </div>
+
+    <table style="border:none;margin-bottom:10px;">
+      <tbody>
+        <tr>
+          <td style="vertical-align:top;padding-right:14px;width:70%;border:none;">
+            <table>
+              <tbody>
+                <tr class="sec-hdr"><th colspan="2">PERSONAL INFORMATION</th></tr>
+                <tr><td class="lbl">Employee ID</td><td class="val">${v(staff.employeeID)}</td></tr>
+                <tr><td class="lbl">Full Name</td><td class="val">${v(staff.fullName)}</td></tr>
+                <tr><td class="lbl">Father's / Husband's Name</td><td class="val">${v(staff.fatherName)}</td></tr>
+                <tr><td class="lbl">Date of Birth</td><td class="val">${staff.dob ? esc(formatDate(staff.dob)) : '—'}</td></tr>
+                <tr><td class="lbl">Age</td><td class="val">${staff.dob ? `${calcAge(staff.dob)} Years` : '—'}</td></tr>
+                <tr><td class="lbl">Gender</td><td class="val">${v(staff.gender)}</td></tr>
+                <tr><td class="lbl">Marital Status</td><td class="val">${v(staff.maritalStatus)}</td></tr>
+                <tr><td class="lbl">Blood Group</td><td class="val">${v(staff.bloodGroup)}</td></tr>
+                <tr><td class="lbl">Religion</td><td class="val">${v(staff.religion)}</td></tr>
+                <tr><td class="lbl">Category</td><td class="val">${v(staff.category)}</td></tr>
+                <tr><td class="lbl" style="border-bottom:none;">Nationality</td><td class="val" style="border-bottom:none;">${v(staff.nationality)}</td></tr>
+              </tbody>
+            </table>
+          </td>
+          <td style="vertical-align:top;text-align:center;width:30%;border:none;">
+            <div class="photo-box">${photoHtml}</div>
+            <div style="margin-top:5px;font-size:9pt;font-weight:bold;color:#374151;">Passport Size Photo</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table>
+      <tbody>
+        <tr class="sec-hdr"><th colspan="2">CONTACT INFORMATION</th></tr>
+        <tr><td class="lbl">Mobile Number</td><td class="val">${v(staff.mobile)}</td></tr>
+        <tr><td class="lbl">Alternate Mobile</td><td class="val">${v(staff.alternateMobile)}</td></tr>
+        <tr><td class="lbl">Email ID</td><td class="val">${v(staff.email)}</td></tr>
+        <tr><td class="lbl">Emergency Contact</td><td class="val">${emergency}</td></tr>
+        <tr><td class="lbl" style="background-color:#eff6ff;">Current Address</td><td class="val">${contactAddr || '—'}</td></tr>
+        <tr><td class="lbl" style="border-bottom:none;background-color:#eff6ff;">Permanent Address</td><td class="val" style="border-bottom:none;">${permanentAddr || '—'}</td></tr>
+      </tbody>
+    </table>
+
+    <table>
+      <tbody>
+        <tr class="sec-hdr"><th colspan="2">IDENTITY DOCUMENTS</th></tr>
+        <tr><td class="lbl">Aadhaar Number</td><td class="val">${v(staff.aadhaarNumber)}</td></tr>
+        <tr><td class="lbl">PAN Number</td><td class="val">${v(staff.panNumber)}</td></tr>
+        <tr><td class="lbl">Passport Number</td><td class="val">${v(staff.passportNumber)}</td></tr>
+        <tr><td class="lbl">Voter ID</td><td class="val">${v(staff.voterID)}</td></tr>
+        <tr><td class="lbl" style="border-bottom:none;">Driving License</td><td class="val" style="border-bottom:none;">${v(staff.dlNumber)}</td></tr>
+      </tbody>
+    </table>
+
+    <div class="footer-bar">
+      <span>AIILSG — WB Centre | Confidential</span>
+      <span>Page 1 of 2</span>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page-break">
+    <div class="header">
+      <h1>ALL INDIA INSTITUTE OF LOCAL SELF GOVERNMENT</h1>
+      <h2>EMPLOYEE DETAILS (Continued)</h2>
+    </div>
+
+    <table>
+      <tbody>
+        <tr class="sec-hdr"><th colspan="2">EMPLOYMENT DETAILS</th></tr>
+        <tr><td class="lbl">Designation</td><td class="val">${v(staff.designation)}</td></tr>
+        <tr><td class="lbl">Department</td><td class="val">${v(staff.department)}</td></tr>
+        <tr><td class="lbl">Employment Type</td><td class="val">${v(staff.employmentType)}</td></tr>
+        <tr><td class="lbl">Employment Status</td><td class="val">${v(staff.employmentStatus)}</td></tr>
+        <tr><td class="lbl">Date of Joining</td><td class="val">${staff.joiningDate ? esc(formatDate(staff.joiningDate)) : '—'}</td></tr>
+        <tr><td class="lbl">Resignation Date</td><td class="val">${staff.resignationDate ? esc(formatDate(staff.resignationDate)) : '—'}</td></tr>
+        <tr><td class="lbl">Last Working Date</td><td class="val">${staff.lastWorkingDate ? esc(formatDate(staff.lastWorkingDate)) : '—'}</td></tr>
+        <tr><td class="lbl">Qualification</td><td class="val">${v(staff.qualification)}</td></tr>
+        <tr><td class="lbl">Experience</td><td class="val">${staff.experience ? `${esc(String(staff.experience))} Years` : '—'}</td></tr>
+        <tr><td class="lbl">Reporting Manager</td><td class="val">${v(staff.reportingManager)}</td></tr>
+        <tr><td class="lbl">Project Location</td><td class="val">${v(staff.projectLocation)}</td></tr>
+        <tr><td class="lbl">Working Days</td><td class="val">${esc(fmtWorkingDays(staff.workingDays, staff.customWorkingDays))}</td></tr>
+        <tr><td class="lbl" style="border-bottom:none;">Shift Timing</td><td class="val" style="border-bottom:none;">${shiftTiming}</td></tr>
+      </tbody>
+    </table>
+
+    <table>
+      <tbody>
+        <tr class="sec-hdr"><th colspan="2">BANK DETAILS</th></tr>
+        <tr><td class="lbl">Bank Name</td><td class="val">${v(staff.bankName)}</td></tr>
+        <tr><td class="lbl">Account Number</td><td class="val">${v(staff.accountNumber)}</td></tr>
+        <tr><td class="lbl">IFSC Code</td><td class="val">${v(staff.ifscCode)}</td></tr>
+        <tr><td class="lbl">Branch</td><td class="val">${v(staff.branchName)}</td></tr>
+        <tr><td class="lbl" style="border-bottom:none;">Account Type</td><td class="val" style="border-bottom:none;">${v(staff.accountType)}</td></tr>
+      </tbody>
+    </table>
+
+    <table style="margin-bottom:10px;">
+      <tbody>
+        <tr class="sec-hdr"><th colspan="4">SALARY DETAILS (Monthly)</th></tr>
+        <tr>
+          <th style="padding:5px 10px;background-color:#dbeafe;color:#1e3a8a;font-size:10.5pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">EARNINGS</th>
+          <th style="padding:5px 10px;background-color:#dbeafe;color:#1e3a8a;font-size:10.5pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">Amount</th>
+          <th style="padding:5px 10px;background-color:#fee2e2;color:#991b1b;font-size:10.5pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">DEDUCTIONS</th>
+          <th style="padding:5px 10px;background-color:#fee2e2;color:#991b1b;font-size:10.5pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">Amount</th>
+        </tr>
+        ${salaryRows}
+        <tr>
+          <td style="padding:5px 10px;font-weight:bold;background-color:#dbeafe;border:1px solid #bbb;font-size:10.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;">GROSS SALARY</td>
+          <td style="padding:5px 10px;font-weight:bold;background-color:#dbeafe;border:1px solid #bbb;font-size:10.5pt;text-align:right;-webkit-print-color-adjust:exact;print-color-adjust:exact;">${esc(fmtCur(gross))}</td>
+          <td style="padding:5px 10px;font-weight:bold;background-color:#fee2e2;border:1px solid #bbb;font-size:10.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;">TOTAL DEDUCTIONS</td>
+          <td style="padding:5px 10px;font-weight:bold;background-color:#fee2e2;border:1px solid #bbb;font-size:10.5pt;text-align:right;-webkit-print-color-adjust:exact;print-color-adjust:exact;">${esc(fmtCur(deductions))}</td>
+        </tr>
+        <tr>
+          <td colspan="4" style="padding:7px 10px;font-weight:bold;background-color:#dcfce7;border:1px solid #bbb;font-size:11pt;text-align:center;color:#14532d;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+            NET SALARY: ${esc(fmtCur(net))} per month
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table>
+      <tbody>
+        <tr class="sec-hdr"><th colspan="2">PROJECT ASSIGNMENT</th></tr>
+        <tr><td class="lbl">Assigned Project</td><td class="val">${v(staff.assignedProject)}</td></tr>
+        <tr><td class="lbl">Project Role</td><td class="val">${v(staff.projectRole)}</td></tr>
+        <tr><td class="lbl">Project Site Location</td><td class="val">${v(staff.projectSiteLocation)}</td></tr>
+        <tr><td class="lbl">HR Cost (Monthly)</td><td class="val">${esc(fmtCur(staff.hrCostToProject))}</td></tr>
+        ${remarksRow}
+      </tbody>
+    </table>
+
+    <div style="margin-top:20px;font-size:10.5pt;">
+      <div style="margin-bottom:16px;"><strong>Date:</strong> ${esc(printDate)}</div>
+      <table style="border:none;">
+        <tbody>
+          <tr>
+            <td style="width:45%;padding-top:32px;border-top:1px solid #333;border-bottom:none;border-left:none;border-right:none;text-align:center;font-size:10.5pt;">Employee Signature</td>
+            <td style="width:10%;border:none;"></td>
+            <td style="width:45%;padding-top:32px;border-top:1px solid #333;border-bottom:none;border-left:none;border-right:none;text-align:center;font-size:10.5pt;">
+              Authorized Signatory<br>
+              <span style="font-size:9pt;color:#555;">AIILSG — WB Centre</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer-bar" style="margin-top:14px;">
+      <span>AIILSG — WB Centre | Confidential</span>
+      <span>Page 2 of 2</span>
+    </div>
+  </div>
+</body>
+</html>`
+
+    const printWindow = window.open('', '_blank', 'width=800,height=600')
+    if (!printWindow) {
+      // eslint-disable-next-line no-alert
+      alert('Print window was blocked. Please allow pop-ups for this site and try again.')
+      return
+    }
+    printWindow.document.write(htmlContent)
+    printWindow.document.close()
+    printWindow.focus()
+    // Small delay to allow the new window to fully render before triggering print
+    setTimeout(() => {
+      printWindow.print()
+      printWindow.close()
+    }, 500)
+  }
+
   // ── On-screen sub-components ─────────────────────────────────────────────────
   function InfoRow({ label, value }) {
     return (
@@ -1748,7 +2001,7 @@ function StaffProfile({ staff, onClose, onEdit }) {
               ← Back to Staff List
             </button>
             <div className="flex gap-3">
-              <button onClick={() => window.print()}
+              <button onClick={() => handlePrint()}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                 <Printer size={14} /> Print
               </button>
