@@ -23,7 +23,7 @@ const SAMPLE_HOLIDAYS = [
   { id: 5, date: '2026-12-25', name: 'Christmas Day' },
 ]
 
-const inputCls = 'w-full px-3 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900 transition-all'
+const inputCls = 'w-full px-3 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900 transition-all'
 const selectCls = inputCls + ' cursor-pointer'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -189,7 +189,7 @@ function HolidayModal({ initial, onSave, onClose }) {
               Cancel
             </button>
             <button type="submit"
-              className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors">
+              className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors">
               {initial ? 'Save Changes' : 'Add Holiday'}
             </button>
           </div>
@@ -536,7 +536,7 @@ export default function AttendancePage() {
       <Toast toasts={toasts} />
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 px-6 py-5">
+      <div className="bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 px-6 py-5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-white/20 rounded-xl p-2">
@@ -544,7 +544,7 @@ export default function AttendancePage() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Attendance Management</h1>
-              <p className="text-indigo-200 text-xs mt-0.5">Monthly attendance reports & holiday calendar</p>
+              <p className="text-orange-200 text-xs mt-0.5">Monthly attendance reports & holiday calendar</p>
             </div>
           </div>
         </div>
@@ -562,7 +562,7 @@ export default function AttendancePage() {
               onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-t-lg border-b-2 transition-colors
                 ${activeTab === tab.key
-                  ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40'
+                  ? 'border-orange-500 text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/40'
                 }`}
             >
@@ -671,7 +671,7 @@ function AttendanceTab({
 
           <button
             onClick={onGenerate}
-            className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm"
+            className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors shadow-sm"
           >
             <CalendarDays size={15} />
             Generate / Load
@@ -724,8 +724,8 @@ function AttendanceTab({
       )}
 
       {/* ── Bulk Upload Section ── */}
-      <div className="no-print bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-indigo-100 dark:border-indigo-900/40 overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-3 flex items-center gap-2">
+      <div className="no-print bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-orange-100 dark:border-orange-900/40 overflow-hidden">
+        <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-3 flex items-center gap-2">
           <FileSpreadsheet size={16} className="text-white" />
           <h3 className="text-sm font-bold text-white tracking-wide uppercase">
             Bulk Upload — Clock In / Clock Out Data
@@ -753,7 +753,7 @@ function AttendanceTab({
 
             <button
               onClick={onDownloadTemplate}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-700 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-xl transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-700 hover:bg-orange-100 dark:hover:bg-orange-900/50 rounded-xl transition-colors"
             >
               <Download size={15} />
               Download Template
@@ -822,14 +822,14 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
       {/* Report Header */}
-      <div className="bg-indigo-50 dark:bg-indigo-950/40 border-b border-indigo-100 dark:border-indigo-900 px-6 py-5 text-center print-header">
-        <p className="text-xs font-semibold tracking-widest text-indigo-600 dark:text-indigo-400 uppercase mb-0.5">
+      <div className="bg-orange-50 dark:bg-orange-950/40 border-b border-orange-100 dark:border-orange-900 px-6 py-5 text-center print-header">
+        <p className="text-xs font-semibold tracking-widest text-orange-600 dark:text-orange-400 uppercase mb-0.5">
           Monthly Attendance Report
         </p>
         <h2 className="text-lg font-bold text-gray-900 dark:text-white">
           All India Institute of Local Self Government
         </h2>
-        <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 mt-1">
+        <p className="text-sm font-semibold text-orange-700 dark:text-orange-300 mt-1">
           [ MONTH : {monthLabel(reportData.month)} ]
         </p>
       </div>
@@ -873,9 +873,9 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
       <div className="overflow-x-auto">
         <table className="w-full text-xs border-collapse">
           <thead>
-            <tr className="bg-indigo-600 text-white">
+            <tr className="bg-orange-600 text-white">
               {['SL NO.', 'DATE', 'DAY', 'CLOCK IN', 'CLOCK OUT', 'TOTAL HOUR', 'STATUS'].map(h => (
-                <th key={h} className="px-3 py-2.5 text-center font-bold tracking-wide whitespace-nowrap border border-indigo-500">
+                <th key={h} className="px-3 py-2.5 text-center font-bold tracking-wide whitespace-nowrap border border-orange-500">
                   {h}
                 </th>
               ))}
@@ -903,7 +903,7 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
                         : 'bg-gray-50/60 dark:bg-gray-750'
 
               return (
-                <tr key={row.date} className={`${rowBg} border-b border-gray-100 dark:border-gray-700 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/20 transition-colors`}>
+                <tr key={row.date} className={`${rowBg} border-b border-gray-100 dark:border-gray-700 hover:bg-orange-50/40 dark:hover:bg-orange-950/20 transition-colors`}>
                   <td className="px-3 py-1.5 text-center font-medium text-gray-500 dark:text-gray-400 border-r border-gray-100 dark:border-gray-700">
                     {idx + 1}
                   </td>
@@ -919,7 +919,7 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
                       value={row.clockIn}
                       onChange={e => updateRow(idx, 'clockIn', e.target.value)}
                       disabled={isRest || isHoliday}
-                      className="text-xs text-center bg-transparent border border-gray-200 dark:border-gray-600 rounded-lg px-1.5 py-1 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-200 dark:focus:ring-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 w-24"
+                      className="text-xs text-center bg-transparent border border-gray-200 dark:border-gray-600 rounded-lg px-1.5 py-1 focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-200 dark:focus:ring-orange-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 w-24"
                     />
                   </td>
                   <td className="px-2 py-1 text-center border-r border-gray-100 dark:border-gray-700">
@@ -928,7 +928,7 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
                       value={row.clockOut}
                       onChange={e => updateRow(idx, 'clockOut', e.target.value)}
                       disabled={isRest || isHoliday}
-                      className="text-xs text-center bg-transparent border border-gray-200 dark:border-gray-600 rounded-lg px-1.5 py-1 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-200 dark:focus:ring-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 w-24"
+                      className="text-xs text-center bg-transparent border border-gray-200 dark:border-gray-600 rounded-lg px-1.5 py-1 focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-200 dark:focus:ring-orange-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700 dark:text-gray-200 w-24"
                     />
                   </td>
                   <td className="px-3 py-1.5 text-center font-mono font-semibold text-gray-700 dark:text-gray-200 border-r border-gray-100 dark:border-gray-700">
@@ -938,7 +938,7 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
                     <select
                       value={row.status}
                       onChange={e => updateRow(idx, 'status', e.target.value)}
-                      className={`text-xs font-semibold px-2 py-1 rounded-lg border focus:outline-none focus:ring-1 focus:ring-indigo-300 cursor-pointer transition-colors
+                      className={`text-xs font-semibold px-2 py-1 rounded-lg border focus:outline-none focus:ring-1 focus:ring-orange-300 cursor-pointer transition-colors
                         ${row.status === 'PRESENT'       ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-700'
                         : row.status === 'REST DAY'      ? 'bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-300 border-gray-200 dark:border-gray-500'
                         : row.status === 'HOLIDAY'       ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-700'
@@ -955,11 +955,11 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
             })}
 
             {/* Subtotal Row */}
-            <tr className="bg-indigo-600 text-white font-bold">
-              <td colSpan={5} className="px-4 py-2.5 text-right text-xs tracking-wide border-r border-indigo-500">
+            <tr className="bg-orange-600 text-white font-bold">
+              <td colSpan={5} className="px-4 py-2.5 text-right text-xs tracking-wide border-r border-orange-500">
                 EMPLOYEE SUBTOTAL
               </td>
-              <td className="px-3 py-2.5 text-center text-xs font-mono border-r border-indigo-500">
+              <td className="px-3 py-2.5 text-center text-xs font-mono border-r border-orange-500">
                 {sumHours(reportData.rows.filter(r => r.status !== 'REST DAY' && r.status !== 'HOLIDAY' && r.status !== 'LOCAL HOLIDAY'))}
               </td>
               <td className="px-3 py-2.5 text-center text-xs">
@@ -975,7 +975,7 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border-t border-gray-100 dark:border-gray-700">
           {/* Attendance Summary */}
           <div className="border-r-0 lg:border-r border-gray-100 dark:border-gray-700">
-            <div className="bg-indigo-600 px-5 py-2.5">
+            <div className="bg-orange-600 px-5 py-2.5">
               <h3 className="text-xs font-bold text-white tracking-widest uppercase">Attendance Summary</h3>
             </div>
             <table className="w-full text-xs">
@@ -996,8 +996,8 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
                   ['HALF DAY',            summary.counts['HALF DAY'],       'text-purple-600 dark:text-purple-400'],
                   ['ABSENT',              summary.counts['ABSENT'],         'text-red-600 dark:text-red-400'],
                   ['LOCAL HOLIDAY',       summary.counts['LOCAL HOLIDAY'],  'text-orange-600 dark:text-orange-400'],
-                  ['AVAILABLE CL',        summary.availableCL,              'text-indigo-600 dark:text-indigo-400'],
-                  ['REMAINING CL',        summary.remainingCL,              'text-indigo-600 dark:text-indigo-400'],
+                  ['AVAILABLE CL',        summary.availableCL,              'text-orange-600 dark:text-orange-400'],
+                  ['REMAINING CL',        summary.remainingCL,              'text-orange-600 dark:text-orange-400'],
                   ['TOTAL WORKING DAYS',  summary.totalWorking,             'text-gray-800 dark:text-white font-bold'],
                 ].map(([label, val, cls], i) => (
                   <tr key={label} className={`border-b border-gray-100 dark:border-gray-700 ${i % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50/50 dark:bg-gray-700/30'}`}>
@@ -1011,7 +1011,7 @@ function ReportView({ reportData, setReportData, staff, summary, holidaysInMonth
 
           {/* Public Holidays List */}
           <div>
-            <div className="bg-indigo-600 px-5 py-2.5">
+            <div className="bg-orange-600 px-5 py-2.5">
               <h3 className="text-xs font-bold text-white tracking-widest uppercase">Public Holidays This Month</h3>
             </div>
             {holidaysInMonth.length === 0 ? (
@@ -1098,7 +1098,7 @@ function HolidaysTab({ holidays, onAdd, onEdit, onDelete }) {
         </div>
         <button
           onClick={onAdd}
-          className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm"
+          className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors shadow-sm"
         >
           <Plus size={15} />
           Add Holiday
@@ -1125,8 +1125,8 @@ function HolidaysTab({ holidays, onAdd, onEdit, onDelete }) {
             </thead>
             <tbody>
               {holidays.map((h, i) => (
-                <tr key={h.id} className={`border-b border-gray-100 dark:border-gray-700 hover:bg-indigo-50/30 dark:hover:bg-indigo-950/20 transition-colors ${i % 2 === 0 ? '' : 'bg-gray-50/40 dark:bg-gray-700/20'}`}>
-                  <td className="px-6 py-3 font-mono font-semibold text-indigo-600 dark:text-indigo-400">
+                <tr key={h.id} className={`border-b border-gray-100 dark:border-gray-700 hover:bg-orange-50/30 dark:hover:bg-orange-950/20 transition-colors ${i % 2 === 0 ? '' : 'bg-gray-50/40 dark:bg-gray-700/20'}`}>
+                  <td className="px-6 py-3 font-mono font-semibold text-orange-600 dark:text-orange-400">
                     {formatDateDisplay(h.date)}
                   </td>
                   <td className="px-6 py-3 font-medium text-gray-800 dark:text-gray-100">

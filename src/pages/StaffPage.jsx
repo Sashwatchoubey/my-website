@@ -509,11 +509,11 @@ function initials(name) {
 
 function avatarGradient(id) {
   const gradients = [
-    'from-indigo-500 to-purple-600',
+    'from-orange-500 to-orange-600',
     'from-cyan-500 to-blue-600',
     'from-emerald-500 to-teal-600',
     'from-orange-500 to-pink-600',
-    'from-violet-500 to-indigo-600',
+    'from-violet-500 to-violet-600',
     'from-rose-500 to-pink-600',
   ]
   return gradients[(id - 1) % gradients.length]
@@ -579,7 +579,7 @@ function Field({ label, required, children, hint }) {
   )
 }
 
-const inputCls = 'w-full px-3 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900 transition-all'
+const inputCls = 'w-full px-3 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900 transition-all'
 const selectCls = inputCls + ' cursor-pointer'
 
 // ─── Delete Confirm ───────────────────────────────────────────────────────────
@@ -709,13 +709,13 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
 
   function SecHeader({ title, icon: Icon }) {
     return (
-      <div className="col-span-full flex items-center gap-3 pt-5 pb-2 border-b-2 border-indigo-100 dark:border-indigo-900/50 mb-2 mt-1">
+      <div className="col-span-full flex items-center gap-3 pt-5 pb-2 border-b-2 border-orange-100 dark:border-orange-900/50 mb-2 mt-1">
         {Icon && (
-          <div className="w-7 h-7 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg flex items-center justify-center shrink-0">
-            <Icon size={14} className="text-indigo-600 dark:text-indigo-400" />
+          <div className="w-7 h-7 bg-orange-100 dark:bg-orange-900/40 rounded-lg flex items-center justify-center shrink-0">
+            <Icon size={14} className="text-orange-600 dark:text-orange-400" />
           </div>
         )}
-        <h3 className="text-sm font-bold text-indigo-700 dark:text-indigo-400 uppercase tracking-wider">{title}</h3>
+        <h3 className="text-sm font-bold text-orange-700 dark:text-orange-400 uppercase tracking-wider">{title}</h3>
       </div>
     )
   }
@@ -724,10 +724,10 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-start justify-center p-4 overflow-y-auto">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl my-8">
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-700 rounded-t-2xl p-5 text-white">
+        <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-t-2xl p-5 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold tracking-widest text-indigo-200 uppercase">All India Institute of Local Self Government</p>
+              <p className="text-xs font-semibold tracking-widest text-orange-200 uppercase">All India Institute of Local Self Government</p>
               <h2 className="text-xl font-bold mt-0.5">{isEdit ? 'Edit Staff Member' : 'Staff Details Form'}</h2>
             </div>
             <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-xl transition-all">
@@ -742,11 +742,11 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
           {/* Personal Details + Photo */}
           <div className="flex gap-6">
             <div className="flex-1">
-              <div className="flex items-center gap-3 pb-2 border-b-2 border-indigo-100 dark:border-indigo-900/50 mb-4">
-                <div className="w-7 h-7 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg flex items-center justify-center shrink-0">
-                  <User size={14} className="text-indigo-600 dark:text-indigo-400" />
+              <div className="flex items-center gap-3 pb-2 border-b-2 border-orange-100 dark:border-orange-900/50 mb-4">
+                <div className="w-7 h-7 bg-orange-100 dark:bg-orange-900/40 rounded-lg flex items-center justify-center shrink-0">
+                  <User size={14} className="text-orange-600 dark:text-orange-400" />
                 </div>
-                <h3 className="text-sm font-bold text-indigo-700 dark:text-indigo-400 uppercase tracking-wider">Personal Details</h3>
+                <h3 className="text-sm font-bold text-orange-700 dark:text-orange-400 uppercase tracking-wider">Personal Details</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Field label="Full Name" required>
@@ -803,7 +803,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
             {/* Photo Box */}
             <div className="shrink-0 flex flex-col items-center gap-2 pt-12">
               <div
-                className="w-[150px] h-[180px] rounded-xl border-4 border-indigo-200 dark:border-indigo-700 bg-gray-100 dark:bg-gray-700 overflow-hidden flex flex-col items-center justify-center cursor-pointer shadow-md relative group"
+                className="w-[150px] h-[180px] rounded-xl border-4 border-orange-200 dark:border-orange-700 bg-gray-100 dark:bg-gray-700 overflow-hidden flex flex-col items-center justify-center cursor-pointer shadow-md relative group"
                 onClick={() => document.getElementById('staff-photo-input').click()}
               >
                 {form.photo ? (
@@ -844,7 +844,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </Field>
             <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
-              <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Current Address</p>
+              <p className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-3 uppercase tracking-wider">Current Address</p>
             </div>
             <div className="col-span-full">
               <Field label="Current Address" required>
@@ -865,7 +865,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
               {errors.currentPIN && <p className="text-red-500 text-xs mt-1">{errors.currentPIN}</p>}
             </Field>
             <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1 flex items-center gap-3">
-              <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider flex-1">Permanent Address</p>
+              <p className="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider flex-1">Permanent Address</p>
               <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
                 <input type="checkbox" checked={sameAddress} onChange={e => setSameAddress(e.target.checked)} className="rounded" />
                 Same as Current Address
@@ -886,7 +886,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
               <input className={inputCls} value={form.permanentPIN} onChange={e => set('permanentPIN', e.target.value)} placeholder="6-digit PIN" maxLength={6} />
             </Field>
             <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
-              <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Emergency Contact</p>
+              <p className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-3 uppercase tracking-wider">Emergency Contact</p>
             </div>
             <Field label="Emergency Contact Name">
               <input className={inputCls} value={form.emergencyName} onChange={e => set('emergencyName', e.target.value)} placeholder="Full name" />
@@ -905,38 +905,38 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
               {errors.aadhaarNumber && <p className="text-red-500 text-xs mt-1">{errors.aadhaarNumber}</p>}
             </Field>
             <Field label="Aadhaar Card Upload">
-              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
             </Field>
             <Field label="PAN Number" required>
               <input className={inputCls} value={form.panNumber} onChange={e => set('panNumber', e.target.value.toUpperCase())} placeholder="ABCDE1234F" maxLength={10} />
               {errors.panNumber && <p className="text-red-500 text-xs mt-1">{errors.panNumber}</p>}
             </Field>
             <Field label="PAN Card Upload">
-              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
             </Field>
             <Field label="Passport Number">
               <input className={inputCls} value={form.passportNumber} onChange={e => set('passportNumber', e.target.value.toUpperCase())} placeholder="e.g. N1234567" />
             </Field>
             <Field label="Passport Upload">
-              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
             </Field>
             <Field label="Voter ID Number">
               <input className={inputCls} value={form.voterID} onChange={e => set('voterID', e.target.value.toUpperCase())} placeholder="Voter ID" />
             </Field>
             <Field label="Voter ID Upload">
-              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
             </Field>
             <Field label="Driving License Number">
               <input className={inputCls} value={form.dlNumber} onChange={e => set('dlNumber', e.target.value.toUpperCase())} placeholder="DL Number" />
             </Field>
             <Field label="DL Upload">
-              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
             </Field>
             <Field label="Other Document Name">
               <input className={inputCls} value={form.otherDocName || ''} onChange={e => set('otherDocName', e.target.value)} placeholder="e.g. Birth Certificate" />
             </Field>
             <Field label="Other Document Upload">
-              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
             </Field>
 
             {/* Bank Details */}
@@ -968,7 +968,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
             </Field>
             <div className="col-span-full">
               <Field label="Cancelled Cheque Upload">
-                <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
+                <input type="file" accept=".pdf,.jpg,.jpeg,.png" className={inputCls + ' file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700 file:text-xs file:font-semibold file:px-3 file:py-1'} />
               </Field>
             </div>
 
@@ -977,7 +977,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
             <Field label="Employee ID / Code" required>
               <div className="flex gap-2">
                 <input className={inputCls} value={form.employeeID} onChange={e => set('employeeID', e.target.value)} placeholder="e.g. AIILSG-001" />
-                <button type="button" onClick={autoGenID} className="px-3 py-2 text-xs bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-xl hover:bg-indigo-200 transition-all whitespace-nowrap font-semibold">Auto</button>
+                <button type="button" onClick={autoGenID} className="px-3 py-2 text-xs bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 rounded-xl hover:bg-orange-200 transition-all whitespace-nowrap font-semibold">Auto</button>
               </div>
               {errors.employeeID && <p className="text-red-500 text-xs mt-1">{errors.employeeID}</p>}
             </Field>
@@ -1037,7 +1037,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
             {/* Salary Details */}
             <SecHeader title="Salary Details" icon={IndianRupee} />
             <div className="col-span-full">
-              <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Earnings</p>
+              <p className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-3 uppercase tracking-wider">Earnings</p>
             </div>
             <Field label="Basic Salary (₹)" required>
               <input type="number" min={0} className={inputCls} value={form.basicSalary} onChange={e => set('basicSalary', e.target.value)} placeholder="0" />
@@ -1062,7 +1062,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
               <input type="number" min={0} className={inputCls} value={form.otherAllowances} onChange={e => set('otherAllowances', e.target.value)} placeholder="0" />
             </Field>
             <Field label="Gross Salary (₹)" hint="Auto-calculated">
-              <div className={inputCls + ' bg-indigo-50 dark:bg-indigo-900/20 font-semibold text-indigo-700 dark:text-indigo-300 cursor-not-allowed'}>
+              <div className={inputCls + ' bg-orange-50 dark:bg-orange-900/20 font-semibold text-orange-700 dark:text-orange-300 cursor-not-allowed'}>
                 {fmtCur(gross)}
               </div>
             </Field>
@@ -1159,7 +1159,7 @@ function StaffForm({ initial, onSave, onClose, allProjects, existingIDs }) {
                               const current = form.customWorkingDays || []
                               set('customWorkingDays', checked ? current.filter(d => d !== day) : [...current, day])
                             }}
-                            className="w-4 h-4 rounded text-indigo-600"
+                            className="w-4 h-4 rounded text-orange-600"
                           />
                           <span className="text-sm text-gray-700 dark:text-gray-300">{day}</span>
                         </label>
@@ -1311,10 +1311,10 @@ function StaffProfile({ staff, onClose, onEdit }) {
     const salaryRows = earnPadded.map(([elabel, eamt], i) => {
       const [dlabel, damt] = dedPadded[i] || ['', '']
       return `<tr>
-        <td style="padding:4px 10px;border:1px solid #ddd;font-size:10.5pt;">${esc(elabel)}</td>
-        <td style="padding:4px 10px;border:1px solid #ddd;font-size:10.5pt;text-align:right;">${eamt ? esc(fmtCur(eamt)) : ''}</td>
-        <td style="padding:4px 10px;border:1px solid #ddd;font-size:10.5pt;">${esc(dlabel)}</td>
-        <td style="padding:4px 10px;border:1px solid #ddd;font-size:10.5pt;text-align:right;">${damt ? esc(fmtCur(damt)) : ''}</td>
+        <td style="padding:3px 8px;border:1px solid #ddd;font-size:9pt;">${esc(elabel)}</td>
+        <td style="padding:3px 8px;border:1px solid #ddd;font-size:9pt;text-align:right;">${eamt ? esc(fmtCur(eamt)) : ''}</td>
+        <td style="padding:3px 8px;border:1px solid #ddd;font-size:9pt;">${esc(dlabel)}</td>
+        <td style="padding:3px 8px;border:1px solid #ddd;font-size:9pt;text-align:right;">${damt ? esc(fmtCur(damt)) : ''}</td>
       </tr>`
     }).join('')
 
@@ -1341,18 +1341,18 @@ function StaffProfile({ staff, onClose, onEdit }) {
   <title>Employee Details - ${esc(staff.fullName)}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; color: #000; background: #fff; }
-    @page { size: A4; margin: 15mm 12mm; }
+    body { font-family: Arial, Helvetica, sans-serif; font-size: 9pt; color: #000; background: #fff; }
+    @page { size: A4; margin: 10mm 10mm; }
     .page-break { page-break-before: always; }
-    .header { background-color: #000 !important; color: #fff !important; padding: 12px 16px; text-align: center; margin-bottom: 14px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .header h1 { font-size: 15pt; font-weight: bold; color: #fff !important; letter-spacing: 0.5px; }
-    .header h2 { font-size: 12pt; font-weight: bold; margin-top: 4px; letter-spacing: 1px; color: #fff !important; }
-    table { width: 100%; border-collapse: collapse; border: 1px solid #bbb; margin-bottom: 10px; }
-    .sec-hdr th { background-color: #1e3a8a !important; color: #fff !important; padding: 6px 10px; font-weight: bold; font-size: 11pt; text-align: left; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .lbl { padding: 5px 10px; font-weight: bold; font-size: 10.5pt; border-bottom: 1px solid #ddd; width: 38%; vertical-align: top; background-color: #f8fafc; color: #000; }
-    .val { padding: 5px 10px; font-size: 10.5pt; border-bottom: 1px solid #ddd; color: #000; }
-    .photo-box { width: 130px; height: 162px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f0f0f0; margin: 4px auto 0; }
-    .footer-bar { display: flex; justify-content: space-between; margin-top: 8px; font-size: 9pt; color: #555; border-top: 1px solid #ddd; padding-top: 6px; }
+    .header { background-color: #000 !important; color: #fff !important; padding: 8px 12px; text-align: center; margin-bottom: 10px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .header h1 { font-size: 13pt; font-weight: bold; color: #fff !important; letter-spacing: 0.5px; }
+    .header h2 { font-size: 10pt; font-weight: bold; margin-top: 3px; letter-spacing: 1px; color: #fff !important; }
+    table { width: 100%; border-collapse: collapse; border: 1px solid #bbb; margin-bottom: 6px; }
+    .sec-hdr th { background-color: #1e3a8a !important; color: #fff !important; padding: 4px 8px; font-weight: bold; font-size: 10pt; text-align: left; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .lbl { padding: 3px 8px; font-weight: bold; font-size: 9pt; border-bottom: 1px solid #ddd; width: 38%; vertical-align: top; background-color: #f8fafc; color: #000; }
+    .val { padding: 3px 8px; font-size: 9pt; border-bottom: 1px solid #ddd; color: #000; }
+    .photo-box { width: 120px; height: 150px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f0f0f0; margin: 4px auto 0; }
+    .footer-bar { display: flex; justify-content: space-between; margin-top: 6px; font-size: 8pt; color: #555; border-top: 1px solid #ddd; padding-top: 4px; }
   </style>
 </head>
 <body>
@@ -1363,7 +1363,7 @@ function StaffProfile({ staff, onClose, onEdit }) {
       <h2>EMPLOYEE DETAILS</h2>
     </div>
 
-    <table style="border:none;margin-bottom:10px;">
+    <table style="border:none;margin-bottom:6px;">
       <tbody>
         <tr>
           <td style="vertical-align:top;padding-right:14px;width:70%;border:none;">
@@ -1458,24 +1458,24 @@ function StaffProfile({ staff, onClose, onEdit }) {
       </tbody>
     </table>
 
-    <table style="margin-bottom:10px;">
+    <table style="margin-bottom:6px;">
       <tbody>
         <tr class="sec-hdr"><th colspan="4">SALARY DETAILS (Monthly)</th></tr>
         <tr>
-          <th style="padding:5px 10px;background-color:#dbeafe;color:#1e3a8a;font-size:10.5pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">EARNINGS</th>
-          <th style="padding:5px 10px;background-color:#dbeafe;color:#1e3a8a;font-size:10.5pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">Amount</th>
-          <th style="padding:5px 10px;background-color:#fee2e2;color:#991b1b;font-size:10.5pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">DEDUCTIONS</th>
-          <th style="padding:5px 10px;background-color:#fee2e2;color:#991b1b;font-size:10.5pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">Amount</th>
+          <th style="padding:3px 8px;background-color:#dbeafe;color:#1e3a8a;font-size:9pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">EARNINGS</th>
+          <th style="padding:3px 8px;background-color:#dbeafe;color:#1e3a8a;font-size:9pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">Amount</th>
+          <th style="padding:3px 8px;background-color:#fee2e2;color:#991b1b;font-size:9pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">DEDUCTIONS</th>
+          <th style="padding:3px 8px;background-color:#fee2e2;color:#991b1b;font-size:9pt;font-weight:bold;border:1px solid #bbb;width:25%;-webkit-print-color-adjust:exact;print-color-adjust:exact;">Amount</th>
         </tr>
         ${salaryRows}
         <tr>
-          <td style="padding:5px 10px;font-weight:bold;background-color:#dbeafe;border:1px solid #bbb;font-size:10.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;">GROSS SALARY</td>
-          <td style="padding:5px 10px;font-weight:bold;background-color:#dbeafe;border:1px solid #bbb;font-size:10.5pt;text-align:right;-webkit-print-color-adjust:exact;print-color-adjust:exact;">${esc(fmtCur(gross))}</td>
-          <td style="padding:5px 10px;font-weight:bold;background-color:#fee2e2;border:1px solid #bbb;font-size:10.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;">TOTAL DEDUCTIONS</td>
-          <td style="padding:5px 10px;font-weight:bold;background-color:#fee2e2;border:1px solid #bbb;font-size:10.5pt;text-align:right;-webkit-print-color-adjust:exact;print-color-adjust:exact;">${esc(fmtCur(deductions))}</td>
+          <td style="padding:3px 8px;font-weight:bold;background-color:#dbeafe;border:1px solid #bbb;font-size:9pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;">GROSS SALARY</td>
+          <td style="padding:3px 8px;font-weight:bold;background-color:#dbeafe;border:1px solid #bbb;font-size:9pt;text-align:right;-webkit-print-color-adjust:exact;print-color-adjust:exact;">${esc(fmtCur(gross))}</td>
+          <td style="padding:3px 8px;font-weight:bold;background-color:#fee2e2;border:1px solid #bbb;font-size:9pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;">TOTAL DEDUCTIONS</td>
+          <td style="padding:3px 8px;font-weight:bold;background-color:#fee2e2;border:1px solid #bbb;font-size:9pt;text-align:right;-webkit-print-color-adjust:exact;print-color-adjust:exact;">${esc(fmtCur(deductions))}</td>
         </tr>
         <tr>
-          <td colspan="4" style="padding:7px 10px;font-weight:bold;background-color:#dcfce7;border:1px solid #bbb;font-size:11pt;text-align:center;color:#14532d;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+          <td colspan="4" style="padding:5px 8px;font-weight:bold;background-color:#dcfce7;border:1px solid #bbb;font-size:9pt;text-align:center;color:#14532d;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
             NET SALARY: ${esc(fmtCur(net))} per month
           </td>
         </tr>
@@ -1493,16 +1493,16 @@ function StaffProfile({ staff, onClose, onEdit }) {
       </tbody>
     </table>
 
-    <div style="margin-top:20px;font-size:10.5pt;">
-      <div style="margin-bottom:16px;"><strong>Date:</strong> ${esc(printDate)}</div>
+    <div style="margin-top:14px;font-size:9pt;">
+      <div style="margin-bottom:10px;"><strong>Date:</strong> ${esc(printDate)}</div>
       <table style="border:none;">
         <tbody>
           <tr>
-            <td style="width:45%;padding-top:32px;border-top:1px solid #333;border-bottom:none;border-left:none;border-right:none;text-align:center;font-size:10.5pt;">Employee Signature</td>
+            <td style="width:45%;padding-top:20px;border-top:1px solid #333;border-bottom:none;border-left:none;border-right:none;text-align:center;font-size:9pt;">Employee Signature</td>
             <td style="width:10%;border:none;"></td>
-            <td style="width:45%;padding-top:32px;border-top:1px solid #333;border-bottom:none;border-left:none;border-right:none;text-align:center;font-size:10.5pt;">
+            <td style="width:45%;padding-top:20px;border-top:1px solid #333;border-bottom:none;border-left:none;border-right:none;text-align:center;font-size:9pt;">
               Authorized Signatory<br>
-              <span style="font-size:9pt;color:#555;">AIILSG — WB Centre</span>
+              <span style="font-size:8pt;color:#555;">AIILSG — WB Centre</span>
             </td>
           </tr>
         </tbody>
@@ -1545,8 +1545,8 @@ function StaffProfile({ staff, onClose, onEdit }) {
 
   function SectionTitle({ title }) {
     return (
-      <div className="col-span-full flex items-center gap-3 pt-5 pb-2 border-b-2 border-indigo-100 dark:border-indigo-900/50 mb-2">
-        <h3 className="text-sm font-bold text-indigo-700 dark:text-indigo-400 uppercase tracking-wider">{title}</h3>
+      <div className="col-span-full flex items-center gap-3 pt-5 pb-2 border-b-2 border-orange-100 dark:border-orange-900/50 mb-2">
+        <h3 className="text-sm font-bold text-orange-700 dark:text-orange-400 uppercase tracking-wider">{title}</h3>
       </div>
     )
   }
@@ -1786,12 +1786,12 @@ function StaffProfile({ staff, onClose, onEdit }) {
       <div className="staff-modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-start justify-center p-4 overflow-y-auto">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl my-8">
           {/* AIILSG Letterhead Header */}
-          <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 rounded-t-2xl p-6 text-white relative">
+          <div className="bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 rounded-t-2xl p-6 text-white relative">
             <button onClick={onClose} className="no-print absolute top-4 right-4 p-2 hover:bg-white/20 rounded-xl transition-all">
               <X size={18} />
             </button>
             <div className="text-center mb-5">
-              <p className="text-xs font-bold tracking-widest text-indigo-200 uppercase mb-1">All India Institute of Local Self Government</p>
+              <p className="text-xs font-bold tracking-widest text-orange-200 uppercase mb-1">All India Institute of Local Self Government</p>
               <h2 className="text-xl font-bold tracking-wide">STAFF DETAILS</h2>
               <div className="w-24 h-0.5 bg-white/40 mx-auto mt-2" />
             </div>
@@ -1808,22 +1808,22 @@ function StaffProfile({ staff, onClose, onEdit }) {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-2xl font-bold truncate">{staff.fullName}</h3>
-                <p className="text-indigo-200 mt-0.5">{staff.designation}</p>
+                <p className="text-orange-200 mt-0.5">{staff.designation}</p>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 mt-3 text-sm">
                   <div>
-                    <span className="text-indigo-300 text-xs">Employee ID</span>
+                    <span className="text-orange-300 text-xs">Employee ID</span>
                     <p className="font-semibold">{staff.employeeID || '—'}</p>
                   </div>
                   <div>
-                    <span className="text-indigo-300 text-xs">Department</span>
+                    <span className="text-orange-300 text-xs">Department</span>
                     <p className="font-semibold">{staff.department || '—'}</p>
                   </div>
                   <div>
-                    <span className="text-indigo-300 text-xs">Status</span>
+                    <span className="text-orange-300 text-xs">Status</span>
                     <p><span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${statusColor(staff.employmentStatus)}`}>{staff.employmentStatus}</span></p>
                   </div>
                   <div>
-                    <span className="text-indigo-300 text-xs">Location</span>
+                    <span className="text-orange-300 text-xs">Location</span>
                     <p className="font-semibold">{staff.projectLocation || '—'}</p>
                   </div>
                 </div>
@@ -1854,7 +1854,7 @@ function StaffProfile({ staff, onClose, onEdit }) {
               <InfoRow label="Alternate Mobile" value={staff.alternateMobile} />
               <InfoRow label="Email" value={staff.email} />
               <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
-                <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Current Address</p>
+                <p className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-3 uppercase tracking-wider">Current Address</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <InfoRow label="Address" value={staff.currentAddress} />
                   <InfoRow label="City" value={staff.currentCity} />
@@ -1863,7 +1863,7 @@ function StaffProfile({ staff, onClose, onEdit }) {
                 </div>
               </div>
               <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
-                <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Permanent Address</p>
+                <p className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-3 uppercase tracking-wider">Permanent Address</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <InfoRow label="Address" value={staff.permanentAddress} />
                   <InfoRow label="City" value={staff.permanentCity} />
@@ -1872,7 +1872,7 @@ function StaffProfile({ staff, onClose, onEdit }) {
                 </div>
               </div>
               <div className="col-span-full border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
-                <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3 uppercase tracking-wider">Emergency Contact</p>
+                <p className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-3 uppercase tracking-wider">Emergency Contact</p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <InfoRow label="Name" value={staff.emergencyName} />
                   <InfoRow label="Number" value={staff.emergencyNumber} />
@@ -1930,9 +1930,9 @@ function StaffProfile({ staff, onClose, onEdit }) {
               {/* Salary Details */}
               <SectionTitle title="Salary Details" />
               <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
-                <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 text-center">
-                  <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-1">Gross Salary</p>
-                  <p className="text-xl font-bold text-indigo-700 dark:text-indigo-300">{fmtCur(gross)}</p>
+                <div className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border border-orange-200 dark:border-orange-800 rounded-xl p-4 text-center">
+                  <p className="text-xs font-semibold text-orange-600 dark:text-orange-400 uppercase tracking-wider mb-1">Gross Salary</p>
+                  <p className="text-xl font-bold text-orange-700 dark:text-orange-300">{fmtCur(gross)}</p>
                 </div>
                 <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-center">
                   <p className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wider mb-1">Deductions</p>
@@ -2006,7 +2006,7 @@ function StaffProfile({ staff, onClose, onEdit }) {
                 <Printer size={14} /> Print
               </button>
               <button onClick={onEdit}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-all">
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 text-white text-sm font-semibold hover:bg-orange-700 transition-all">
                 <Pencil size={14} /> Edit
               </button>
             </div>
@@ -2025,7 +2025,7 @@ function StaffCard({ member, onView, onEdit, onDelete }) {
       <div className="p-5">
         <div className="flex items-center gap-4 mb-4">
           {member.photo ? (
-            <img src={member.photo} alt={member.fullName} className="w-14 h-14 rounded-xl object-cover shadow-md shrink-0 border-2 border-indigo-200 dark:border-indigo-700" />
+            <img src={member.photo} alt={member.fullName} className="w-14 h-14 rounded-xl object-cover shadow-md shrink-0 border-2 border-orange-200 dark:border-orange-700" />
           ) : (
             <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${avatarGradient(member.id)} flex items-center justify-center text-xl font-bold text-white shadow-md shrink-0`}>
               {initials(member.fullName)}
@@ -2060,7 +2060,7 @@ function StaffCard({ member, onView, onEdit, onDelete }) {
           </div>
         </div>
         <div className="flex gap-2 border-t border-gray-100 dark:border-gray-700 pt-3">
-          <button onClick={() => onView(member)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all">
+          <button onClick={() => onView(member)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/30 transition-all">
             <Eye size={12} /> View
           </button>
           <button onClick={() => onEdit(member)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-all">
@@ -2204,7 +2204,7 @@ export default function StaffPage() {
         </div>
         <button
           onClick={() => { setEditTarget(null); setShowForm(true) }}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl"
         >
           <Plus size={16} /> Add New Staff
         </button>
@@ -2213,7 +2213,7 @@ export default function StaffPage() {
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Total Staff', value: stats.total, icon: Users, color: 'from-indigo-500 to-purple-600' },
+          { label: 'Total Staff', value: stats.total, icon: Users, color: 'from-orange-500 to-orange-600' },
           { label: 'Active', value: stats.active, icon: CheckCircle, color: 'from-emerald-500 to-teal-600' },
           { label: 'On Notice', value: stats.onNotice, icon: AlertCircle, color: 'from-amber-500 to-orange-600' },
           { label: 'Monthly Payroll', value: fmtCur(stats.totalSalary), icon: IndianRupee, color: 'from-cyan-500 to-blue-600', isStr: true },
@@ -2236,7 +2236,7 @@ export default function StaffPage() {
           <div className="relative flex-1">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
-              className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900"
+              className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900"
               placeholder="Search by name, designation, project, employee ID..."
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -2244,7 +2244,7 @@ export default function StaffPage() {
           </div>
           <div className="flex gap-2">
             <button onClick={() => setShowFilters(f => !f)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${showFilters ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${showFilters ? 'bg-orange-600 text-white border-orange-600' : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
               <Filter size={15} /> Filters
             </button>
             <button onClick={() => setView(v => v === 'grid' ? 'table' : 'grid')}
@@ -2286,7 +2286,7 @@ export default function StaffPage() {
         </p>
         {(search || filterStatus !== 'All' || filterDept !== 'All' || filterProject !== 'All') && (
           <button onClick={() => { setSearch(''); setFilterStatus('All'); setFilterDept('All'); setFilterProject('All') }}
-            className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+            className="text-xs text-orange-600 dark:text-orange-400 hover:underline font-medium">
             Clear filters
           </button>
         )}
@@ -2340,7 +2340,7 @@ export default function StaffPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         {member.photo ? (
-                          <img src={member.photo} alt={member.fullName} className="w-9 h-9 rounded-xl object-cover shrink-0 border border-indigo-200 dark:border-indigo-700" />
+                          <img src={member.photo} alt={member.fullName} className="w-9 h-9 rounded-xl object-cover shrink-0 border border-orange-200 dark:border-orange-700" />
                         ) : (
                           <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${avatarGradient(member.id)} flex items-center justify-center text-xs font-bold text-white shrink-0`}>
                             {initials(member.fullName)}
@@ -2366,7 +2366,7 @@ export default function StaffPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1">
-                        <button onClick={() => setViewTarget(member)} className="p-1.5 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all" title="View">
+                        <button onClick={() => setViewTarget(member)} className="p-1.5 rounded-lg text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/30 transition-all" title="View">
                           <Eye size={14} />
                         </button>
                         <button onClick={() => handleEdit(member)} className="p-1.5 rounded-lg text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-all" title="Edit">

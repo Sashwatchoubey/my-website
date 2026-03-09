@@ -45,7 +45,7 @@ export default function Sidebar({ open, onClose }) {
       <aside
         className={`
           fixed top-0 left-0 h-full z-40 w-64
-          bg-gradient-to-b from-indigo-950 via-indigo-900 to-indigo-950
+          bg-[#1B2A3D]
           shadow-2xl flex flex-col
           transition-transform duration-300 ease-in-out
           ${open ? 'translate-x-0' : '-translate-x-full'}
@@ -53,15 +53,15 @@ export default function Sidebar({ open, onClose }) {
         `}
       >
         {/* Logo */}
-        <div className="p-5 border-b border-indigo-800/50 flex items-center justify-between">
+        <div className="p-5 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <AiilsgLogo size={40} />
             <div>
               <div className="text-white font-bold text-sm leading-tight">AIILSG</div>
-              <div className="text-indigo-300 text-xs leading-tight">WB Centre · PMS</div>
+              <div className="text-orange-300 text-xs leading-tight">WB Centre · PMS</div>
             </div>
           </div>
-          <button onClick={onClose} className="lg:hidden text-indigo-300 hover:text-white p-1">
+          <button onClick={onClose} className="lg:hidden text-orange-300 hover:text-white p-1">
             <X size={18} />
           </button>
         </div>
@@ -76,17 +76,17 @@ export default function Sidebar({ open, onClose }) {
               className={({ isActive }) => `
                 flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group
                 ${isActive
-                  ? 'bg-white/15 text-white shadow-lg'
+                  ? 'bg-orange-500/20 text-orange-400 shadow-lg'
                   : active
-                    ? 'text-indigo-200 hover:bg-white/10 hover:text-white'
-                    : 'text-indigo-400 cursor-default opacity-60'
+                    ? 'text-gray-300 hover:bg-[#2D3E52] hover:text-white'
+                    : 'text-gray-500 cursor-default opacity-60'
                 }
               `}
             >
               <Icon size={18} className="shrink-0" />
               <span className="flex-1">{label}</span>
               {!active && (
-                <span className="text-xs bg-indigo-800/60 text-indigo-300 px-1.5 py-0.5 rounded-full">Soon</span>
+                <span className="text-xs bg-white/10 text-gray-400 px-1.5 py-0.5 rounded-full">Soon</span>
               )}
               {active && (
                 <ChevronRight size={14} className="opacity-0 group-hover:opacity-60 transition-opacity" />
@@ -96,19 +96,19 @@ export default function Sidebar({ open, onClose }) {
         </nav>
 
         {/* User info + logout */}
-        <div className="p-4 border-t border-indigo-800/50">
+        <div className="p-4 border-t border-white/10">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
               {user?.avatar}
             </div>
             <div className="min-w-0">
               <div className="text-white text-xs font-semibold truncate">{user?.name}</div>
-              <div className="text-indigo-400 text-xs truncate">{user?.role}</div>
+              <div className="text-gray-400 text-xs truncate">{user?.role}</div>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-indigo-300 hover:bg-red-500/20 hover:text-red-300 transition-all text-sm font-medium"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-gray-300 hover:bg-red-500/20 hover:text-red-300 transition-all text-sm font-medium"
           >
             <LogOut size={16} />
             <span>Logout</span>

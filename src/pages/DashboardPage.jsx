@@ -24,7 +24,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 max-w-[1400px]">
       {/* Welcome banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 p-6 text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 p-6 text-white shadow-xl">
         {/* Decorative circles */}
         <div className="absolute -top-8 -right-8 w-40 h-40 bg-white/5 rounded-full" />
         <div className="absolute -bottom-6 -right-16 w-56 h-56 bg-white/5 rounded-full" />
@@ -35,10 +35,10 @@ export default function DashboardPage() {
             <h2 className="text-xl font-bold mb-1">
               Welcome back, {user?.name?.split(' ')[0]} 👋
             </h2>
-            <p className="text-indigo-200 text-sm">
+            <p className="text-orange-200 text-sm">
               {todayFormatted()} · West Bengal Centre, Kolkata
             </p>
-            <p className="text-indigo-300 text-xs mt-1">
+            <p className="text-orange-300 text-xs mt-1">
               AIILSG Project Management System — FY 2024-25
             </p>
           </div>
@@ -46,7 +46,7 @@ export default function DashboardPage() {
             <span className="bg-white/15 border border-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-xl">
               {user?.role}
             </span>
-            <span className="text-indigo-300 text-xs">Kolkata HQ</span>
+            <span className="text-orange-300 text-xs">Kolkata HQ</span>
           </div>
         </div>
       </div>
@@ -55,10 +55,10 @@ export default function DashboardPage() {
       <SummaryCards />
 
       {/* About AIILSG */}
-      <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-indigo-100 dark:border-indigo-900/50 shadow-lg p-6">
+      <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-orange-100 dark:border-orange-900/50 shadow-lg p-6">
         {/* Decorative gradient blob */}
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-indigo-600/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-600/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-orange-600/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-orange-400/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10">
           {/* Header */}
@@ -69,7 +69,7 @@ export default function DashboardPage() {
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight">
                   All India Institute of Local Self Government
                 </h3>
-                <span className="bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-700">
+                <span className="bg-orange-100 dark:bg-orange-900/60 text-orange-700 dark:text-orange-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-orange-200 dark:border-orange-700">
                   Est. 1926
                 </span>
               </div>
@@ -79,12 +79,12 @@ export default function DashboardPage() {
                   href="https://www.aiilsg.org"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+                  className="text-orange-600 dark:text-orange-400 hover:underline font-medium"
                 >
                   www.aiilsg.org
                 </a>
               </p>
-              <p className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold mt-1 italic">
+              <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold mt-1 italic">
                 "Strengthening Local Self-Governance for Sustainable Development"
               </p>
             </div>
@@ -100,8 +100,8 @@ export default function DashboardPage() {
           </p>
 
           {/* West Bengal Centre callout */}
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 border border-indigo-200 dark:border-indigo-800 rounded-xl px-4 py-3 mb-5">
-            <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 mb-0.5 uppercase tracking-wide">
+          <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/30 dark:to-amber-900/30 border border-orange-200 dark:border-orange-800 rounded-xl px-4 py-3 mb-5">
+            <p className="text-xs font-semibold text-orange-700 dark:text-orange-300 mb-0.5 uppercase tracking-wide">
               West Bengal Centre · Kolkata
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -119,7 +119,7 @@ export default function DashboardPage() {
               {KEY_SERVICES.map((service) => (
                 <span
                   key={service}
-                  className="bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 text-xs font-medium px-3 py-1 rounded-full"
+                  className="bg-orange-50 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800 text-xs font-medium px-3 py-1 rounded-full"
                 >
                   {service}
                 </span>
