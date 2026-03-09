@@ -1239,6 +1239,7 @@ const PRINT_PAGE_HEADER = {
   padding: '12px 16px', marginBottom: '14px',
   textAlign: 'center',
   pageBreakInside: 'avoid', breakInside: 'avoid',
+  WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact',
 }
 
 // ─── Staff Profile View ───────────────────────────────────────────────────────
@@ -1340,16 +1341,16 @@ function StaffProfile({ staff, onClose, onEdit }) {
                 </td>
                 {/* Photo */}
                 <td style={{ verticalAlign: 'top', textAlign: 'center', width: '30%' }}>
-                  <div style={{ border: '2px solid #333', width: '120px', height: '150px', marginTop: '4px', pageBreakInside: 'avoid', breakInside: 'avoid', overflow: 'hidden' }}>
+                  <div style={{ border: '2px solid #333', width: '130px', height: '162px', marginTop: '4px', pageBreakInside: 'avoid', breakInside: 'avoid', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {staff.photo ? (
                       <img
                         src={staff.photo}
                         alt="Employee Photo"
                         className="staff-photo-print"
-                        style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+                        style={{ width: '120px', height: '150px', objectFit: 'contain', display: 'block' }}
                       />
                     ) : (
-                      <div style={{ width: '100%', height: '100%', backgroundColor: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13pt', color: '#6b7280', flexDirection: 'column', gap: '4px' }}>
+                      <div style={{ width: '120px', height: '150px', backgroundColor: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13pt', color: '#6b7280', flexDirection: 'column', gap: '4px' }}>
                         <span style={{ fontSize: '28pt', color: '#9ca3af' }}>👤</span>
                         <span style={{ fontSize: '9pt' }}>No Photo</span>
                       </div>
@@ -1408,11 +1409,8 @@ function StaffProfile({ staff, onClose, onEdit }) {
           </div>
         </div>
 
-        {/* ── PAGE BREAK ──────────────────────────────────────────────────────── */}
-        <div className="staff-print-page-break" />
-
         {/* ── PAGE 2 ─────────────────────────────────────────────────────────── */}
-        <div>
+        <div className="staff-print-page-break">
           {/* Header */}
           <div style={pageHeaderStyle}>
             <div style={{ fontSize: '15pt', fontWeight: 'bold', color: '#fff', letterSpacing: '0.5px' }}>
