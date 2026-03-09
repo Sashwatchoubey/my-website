@@ -39,8 +39,8 @@ export function ProjectExpenseChart() {
           <YAxis tickFormatter={fmtL} tick={{ fontSize: 10, fill: '#6b7280' }} />
           <Tooltip content={<CustomTooltip />} />
           <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-          <Bar dataKey="budget" name="Budget" fill="#c7d2fe" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="spent"  name="Spent"  fill="#6366f1" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="budget" name="Budget" fill="#FED7AA" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="spent"  name="Spent"  fill="#FF7B1C" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

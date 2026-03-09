@@ -90,7 +90,7 @@ function Field({ label, required, children }) {
 }
 
 const inputCls =
-  'w-full px-3 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900 transition-all'
+  'w-full px-3 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900 transition-all'
 
 // ─── Project Form Modal ───────────────────────────────────────────────────────
 function ProjectFormModal({ initial, onSave, onClose }) {
@@ -140,11 +140,11 @@ function ProjectFormModal({ initial, onSave, onClose }) {
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-700 p-6 rounded-t-3xl shrink-0">
+        <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-6 rounded-t-3xl shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-white font-bold text-lg">{isEdit ? 'Edit Project' : 'Add New Project'}</h2>
-              <p className="text-indigo-200 text-sm mt-0.5">
+              <p className="text-orange-200 text-sm mt-0.5">
                 {isEdit ? 'Update project details below' : 'Fill in the project details below'}
               </p>
             </div>
@@ -158,7 +158,7 @@ function ProjectFormModal({ initial, onSave, onClose }) {
         <form onSubmit={handleSubmit} className="overflow-y-auto flex-1 p-6 space-y-5">
           {/* Section: Project Info */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-3">Project Information</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 mb-3">Project Information</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
                 <Field label="Project Name" required>
@@ -184,7 +184,7 @@ function ProjectFormModal({ initial, onSave, onClose }) {
 
           {/* Section: Client Info */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-3">Client Information</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 mb-3">Client Information</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Client Name" required>
                 <input className={inputCls} value={form.client} onChange={e => set('client', e.target.value)} placeholder="e.g. Kolkata Municipal Corporation" />
@@ -210,7 +210,7 @@ function ProjectFormModal({ initial, onSave, onClose }) {
 
           {/* Section: Finance & Dates */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-3">Finance & Timeline</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 mb-3">Finance & Timeline</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Project Budget (₹)" required>
                 <input className={inputCls} type="number" min={0} value={form.budget} onChange={e => set('budget', e.target.value)} placeholder="e.g. 18500000" />
@@ -229,9 +229,9 @@ function ProjectFormModal({ initial, onSave, onClose }) {
               </Field>
               {period && (
                 <div className="sm:col-span-2">
-                  <div className="bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 rounded-xl px-4 py-2.5 flex items-center gap-2">
-                    <Calendar size={14} className="text-indigo-500" />
-                    <span className="text-xs text-indigo-700 dark:text-indigo-300 font-medium">Project Period: <strong>{period}</strong></span>
+                  <div className="bg-orange-50 dark:bg-orange-900/30 border border-orange-100 dark:border-orange-800 rounded-xl px-4 py-2.5 flex items-center gap-2">
+                    <Calendar size={14} className="text-orange-500" />
+                    <span className="text-xs text-orange-700 dark:text-orange-300 font-medium">Project Period: <strong>{period}</strong></span>
                   </div>
                 </div>
               )}
@@ -240,7 +240,7 @@ function ProjectFormModal({ initial, onSave, onClose }) {
 
           {/* Section: Status & Progress */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-3">Status & Progress</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 mb-3">Status & Progress</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Project Status" required>
                 <select className={inputCls} value={form.status} onChange={e => set('status', e.target.value)}>
@@ -259,7 +259,7 @@ function ProjectFormModal({ initial, onSave, onClose }) {
                 <input
                   type="range" min={0} max={100} value={form.progress}
                   onChange={e => set('progress', e.target.value)}
-                  className="w-full accent-indigo-600 mt-1"
+                  className="w-full accent-orange-600 mt-1"
                 />
               </Field>
             </div>
@@ -285,7 +285,7 @@ function ProjectFormModal({ initial, onSave, onClose }) {
           <button
             type="button"
             onClick={handleSubmit}
-            className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-2.5 rounded-xl text-sm shadow-md hover:shadow-indigo-400/30 transition-all"
+            className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-2.5 rounded-xl text-sm shadow-md hover:shadow-orange-400/30 transition-all"
           >
             {isEdit ? 'Save Changes' : 'Add Project'}
           </button>
@@ -361,11 +361,11 @@ function ProjectDetailModal({ project, onClose, onEdit, onDelete }) {
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-700 p-6 rounded-t-3xl shrink-0">
+        <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-6 rounded-t-3xl shrink-0">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <h2 className="text-white font-bold text-base leading-snug">{project.name}</h2>
-              <p className="text-indigo-200 text-sm mt-1 truncate">{project.client}</p>
+              <p className="text-orange-200 text-sm mt-1 truncate">{project.client}</p>
             </div>
             <button onClick={onClose} className="text-white/70 hover:text-white p-1.5 rounded-xl hover:bg-white/10 shrink-0">
               <X size={20} />
@@ -383,7 +383,7 @@ function ProjectDetailModal({ project, onClose, onEdit, onDelete }) {
 
           {/* Client Details */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-3">Client Details</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 mb-3">Client Details</p>
             <div className="grid grid-cols-2 gap-3">
               {infoRow('Client Name', project.client, <Building2 size={11} />)}
               {infoRow('Organization', project.clientOrganization, <Building2 size={11} />)}
@@ -399,7 +399,7 @@ function ProjectDetailModal({ project, onClose, onEdit, onDelete }) {
 
           {/* Project Details */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-3">Project Details</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 mb-3">Project Details</p>
             <div className="grid grid-cols-2 gap-3">
               {infoRow('Location', formatLocation(project.location, project.district), <MapPin size={11} />)}
               {infoRow('State', project.state || 'West Bengal', <MapPin size={11} />)}
@@ -450,7 +450,7 @@ function ProjectDetailModal({ project, onClose, onEdit, onDelete }) {
           </button>
           <button
             onClick={() => onEdit(project)}
-            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-2.5 rounded-xl text-sm shadow-md transition-all"
+            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-2.5 rounded-xl text-sm shadow-md transition-all"
           >
             <Pencil size={15} /> Edit Project
           </button>
@@ -469,13 +469,13 @@ function ProjectDetailModal({ project, onClose, onEdit, onDelete }) {
 // ─── Project Card ─────────────────────────────────────────────────────────────
 function ProjectCard({ project, onView, onEdit, onDelete }) {
   return (
-    <div className="card p-5 hover:shadow-lg hover:border-indigo-200 dark:hover:border-indigo-700 transition-all duration-200 group relative flex flex-col">
+    <div className="card p-5 hover:shadow-lg hover:border-orange-200 dark:hover:border-orange-700 transition-all duration-200 group relative flex flex-col">
       {/* Action buttons — hover on desktop, always visible on mobile */}
       <div className="absolute top-3 right-3 flex gap-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
         <button
           onClick={e => { e.stopPropagation(); onEdit(project) }}
           title="Edit"
-          className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-colors"
+          className="p-1.5 rounded-lg bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/60 transition-colors"
         >
           <Pencil size={13} />
         </button>
@@ -495,7 +495,7 @@ function ProjectCard({ project, onView, onEdit, onDelete }) {
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white leading-snug line-clamp-2 flex-1">
             {project.name}
           </h3>
-          <ChevronRight size={16} className="text-gray-300 dark:text-gray-600 group-hover:text-indigo-400 transition-colors shrink-0 mt-0.5 hidden sm:block" />
+          <ChevronRight size={16} className="text-gray-300 dark:text-gray-600 group-hover:text-orange-400 transition-colors shrink-0 mt-0.5 hidden sm:block" />
         </div>
 
         {/* Status */}
@@ -637,7 +637,7 @@ export default function ProjectsPage() {
         </div>
         <button
           onClick={() => setEditProject({ ...EMPTY_FORM })}
-          className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium px-4 py-2.5 rounded-xl shadow-md hover:shadow-indigo-400/30 transition-all text-sm self-start sm:self-auto"
+          className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium px-4 py-2.5 rounded-xl shadow-md hover:shadow-orange-400/30 transition-all text-sm self-start sm:self-auto"
         >
           <Plus size={16} />
           Add New Project
@@ -653,7 +653,7 @@ export default function ProjectsPage() {
             placeholder="Search by project name, client, district…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900 transition-all"
+            className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 placeholder-gray-400 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900 transition-all"
           />
           {search && (
             <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -669,7 +669,7 @@ export default function ProjectsPage() {
               onClick={() => setStatusFilter(s)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 statusFilter === s
-                  ? 'bg-indigo-600 text-white shadow-sm'
+                  ? 'bg-orange-500 text-white shadow-sm'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >

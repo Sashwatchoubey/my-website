@@ -130,7 +130,7 @@ function SlipView({ slip, onClose, onPrint }) {
         <div className="no-print flex justify-end gap-2 mb-3">
           <button
             onClick={onPrint}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-600 text-white text-sm font-medium hover:bg-orange-700 transition"
           >
             <Printer size={15} /> Print / Download
           </button>
@@ -417,7 +417,7 @@ function GeneratorModal({ editSlip, onClose, onSaved, showToast }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 rounded-t-2xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 rounded-t-2xl">
           <div className="flex items-center gap-2 text-white">
             <IndianRupee size={18} />
             <h2 className="font-semibold text-base">
@@ -452,7 +452,7 @@ function GeneratorModal({ editSlip, onClose, onSaved, showToast }) {
             </div>
             <button
               onClick={handleLoad}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 text-white text-sm font-medium hover:bg-orange-700 transition"
             >
               <Calendar size={15} /> Load Data
             </button>
@@ -491,7 +491,7 @@ function GeneratorModal({ editSlip, onClose, onSaved, showToast }) {
           {/* Attendance */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3 flex items-center gap-1.5">
-              <Calendar size={15} className="text-indigo-500" /> Attendance
+              <Calendar size={15} className="text-orange-500" /> Attendance
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {numField('Total Working Days', 'totalWorkingDays')}
@@ -528,14 +528,14 @@ function GeneratorModal({ editSlip, onClose, onSaved, showToast }) {
           </div>
 
           {/* Net Salary Summary */}
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-2xl px-6 py-4 flex items-center justify-between border border-indigo-100 dark:border-indigo-800">
+          <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-2xl px-6 py-4 flex items-center justify-between border border-orange-100 dark:border-orange-800">
             <div>
-              <p className="text-xs text-indigo-500 dark:text-indigo-400 uppercase tracking-widest font-medium">Net Salary</p>
-              <p className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-0.5">
+              <p className="text-xs text-orange-500 dark:text-orange-400 uppercase tracking-widest font-medium">Net Salary</p>
+              <p className="text-2xl font-bold text-orange-700 dark:text-orange-300 mt-0.5">
                 {fmtCurrency(totals.netSalary)}
               </p>
             </div>
-            <IndianRupee size={40} className="text-indigo-200 dark:text-indigo-700" />
+            <IndianRupee size={40} className="text-orange-200 dark:text-orange-700" />
           </div>
 
           {/* Actions */}
@@ -549,7 +549,7 @@ function GeneratorModal({ editSlip, onClose, onSaved, showToast }) {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition disabled:opacity-60"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-orange-600 text-white text-sm font-semibold hover:bg-orange-700 transition disabled:opacity-60"
             >
               <CheckCircle size={15} />
               {saving ? 'Saving…' : 'Save Salary Slip'}
@@ -647,19 +647,19 @@ export default function SalaryPage() {
       <Toast toasts={toasts} />
 
       {/* ── Page Header ── */}
-      <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 rounded-2xl px-6 py-5 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-lg">
+      <div className="bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 rounded-2xl px-6 py-5 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-lg">
         <div className="flex items-center gap-3 text-white">
           <div className="bg-white/20 p-2.5 rounded-xl">
             <Wallet size={22} />
           </div>
           <div>
             <h1 className="text-lg font-bold leading-tight">AIILSG WB — Salary Management</h1>
-            <p className="text-sm text-indigo-200 mt-0.5">{Object.keys(slips).length} slip{Object.keys(slips).length !== 1 ? 's' : ''} generated</p>
+            <p className="text-sm text-orange-200 mt-0.5">{Object.keys(slips).length} slip{Object.keys(slips).length !== 1 ? 's' : ''} generated</p>
           </div>
         </div>
         <button
           onClick={() => openGenerator()}
-          className="no-print flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-indigo-700 text-sm font-semibold hover:bg-indigo-50 transition shadow"
+          className="no-print flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-orange-700 text-sm font-semibold hover:bg-orange-50 transition shadow"
         >
           <Plus size={16} /> Generate Salary Slip
         </button>
@@ -692,7 +692,7 @@ export default function SalaryPage() {
           {(search || filterMonth || filterYear) && (
             <button
               onClick={() => { setSearch(''); setFilterMonth(''); setFilterYear('') }}
-              className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline whitespace-nowrap"
+              className="text-xs text-orange-600 dark:text-orange-400 hover:underline whitespace-nowrap"
             >
               Clear
             </button>
@@ -740,7 +740,7 @@ export default function SalaryPage() {
                     <td className="px-5 py-3.5 font-medium text-red-500 dark:text-red-400 whitespace-nowrap">
                       {fmtCurrency(slip.totalDeductions)}
                     </td>
-                    <td className="px-5 py-3.5 font-bold text-indigo-600 dark:text-indigo-400 whitespace-nowrap">
+                    <td className="px-5 py-3.5 font-bold text-orange-600 dark:text-orange-400 whitespace-nowrap">
                       {fmtCurrency(slip.netSalary)}
                     </td>
                     <td className="px-5 py-3.5 whitespace-nowrap text-gray-500 dark:text-gray-400 text-xs">
@@ -751,14 +751,14 @@ export default function SalaryPage() {
                         <button
                           title="View / Print"
                           onClick={() => setViewSlip(slip)}
-                          className="p-1.5 rounded-lg text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition"
+                          className="p-1.5 rounded-lg text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/30 transition"
                         >
                           <Eye size={15} />
                         </button>
                         <button
                           title="Quick Print"
                           onClick={() => { setViewSlip(slip); setTimeout(() => window.print(), PRINT_DELAY_MS) }}
-                          className="p-1.5 rounded-lg text-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition"
+                          className="p-1.5 rounded-lg text-violet-500 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition"
                         >
                           <Printer size={15} />
                         </button>
